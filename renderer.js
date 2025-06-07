@@ -5,7 +5,7 @@
  * structured data as SVG.
  */
 
-import { parseSLML, processMarkdown } from './parser';
+import { parseSLML, processMarkdown } from './parser.js';
 
 // Constants for SVG rendering
 const SVG_PADDING = 20;
@@ -23,16 +23,16 @@ const FONT_FAMILY = 'Arial, sans-serif';
  * @param screen - The parsed SLML screen object
  * @returns SVG string representation
  */
-export function renderSLMLToSVG(screen: any): string {
+export function renderSLMLToSVG(screen) {
   const elements = screen.elements || [];
 
   // Separate special elements from regular elements
-  const appbarElement = elements.find((el: any) => el.type.toLowerCase() === 'appbar');
-  const bottomNavElement = elements.find((el: any) => el.type.toLowerCase() === 'bottomnavigationbar');
-  const fabElement = elements.find((el: any) => el.type.toLowerCase() === 'floatingactionbutton');
+  const appbarElement = elements.find((el) => el.type.toLowerCase() === 'appbar');
+  const bottomNavElement = elements.find((el) => el.type.toLowerCase() === 'bottomnavigationbar');
+  const fabElement = elements.find((el) => el.type.toLowerCase() === 'floatingactionbutton');
 
   // Filter out special elements for normal rendering
-  const regularElements = elements.filter((el: any) => 
+  const regularElements = elements.filter((el) => 
     el.type.toLowerCase() !== 'appbar' &&
     el.type.toLowerCase() !== 'bottomnavigationbar' && 
     el.type.toLowerCase() !== 'floatingactionbutton'
@@ -80,7 +80,7 @@ export function renderSLMLToSVG(screen: any): string {
 
   // Add regular elements
   let currentY = contentStartY;
-  regularElements.forEach((element: any) => {
+  regularElements.forEach((element) => {
     // Check if we still have space for this element
     if (currentY < contentStartY + availableHeight) {
       svg += renderElement(element, SVG_PADDING, currentY, svgWidth);
@@ -168,7 +168,7 @@ export function renderSLMLToSVG(screen: any): string {
  * @param screenWidth - The width of the screen
  * @returns SVG string representation of the element
  */
-function renderElement(element: any, x: number, y: number, screenWidth: number): string {
+function renderElement(element, x, y, screenWidth) {
   const type = element.type;
   const label = element.label;
   const properties = element.properties || {};
@@ -225,7 +225,7 @@ function renderElement(element: any, x: number, y: number, screenWidth: number):
 /**
  * Render an input field
  */
-function renderInput(label: string, x: number, y: number, backgroundColor?: string): string {
+function renderInput(label, x, y, backgroundColor) {
   return `
     <rect 
       x="${x}" 
@@ -251,7 +251,7 @@ function renderInput(label: string, x: number, y: number, backgroundColor?: stri
 /**
  * Render a button
  */
-function renderButton(label: string, x: number, y: number, backgroundColor?: string): string {
+function renderButton(label, x, y, backgroundColor) {
   return `
     <rect 
       x="${x}" 
@@ -277,7 +277,7 @@ function renderButton(label: string, x: number, y: number, backgroundColor?: str
 /**
  * Render a checkbox
  */
-function renderCheckbox(label: string, x: number, y: number, backgroundColor?: string): string {
+function renderCheckbox(label, x, y, backgroundColor) {
   return `
     <rect 
       x="${x}" 
@@ -303,7 +303,7 @@ function renderCheckbox(label: string, x: number, y: number, backgroundColor?: s
 /**
  * Render a link
  */
-function renderLink(label: string, x: number, y: number, backgroundColor?: string): string {
+function renderLink(label, x, y, backgroundColor) {
   // Links typically don't have a background, but we'll add a background rect if specified
   let backgroundRect = '';
   if (backgroundColor) {
@@ -336,7 +336,7 @@ function renderLink(label: string, x: number, y: number, backgroundColor?: strin
 /**
  * Render a margin (empty space)
  */
-function renderMargin(label: string, x: number, y: number, backgroundColor?: string, properties?: any): string {
+function renderMargin(label, x, y, backgroundColor, properties) {
   // Get dimensions from properties or parse from label
   const width = properties?.width ? parseInt(properties.width, 10) : ELEMENT_WIDTH;
   const height = properties?.height ? parseInt(properties.height, 10) : parseInt(label.replace(/[^0-9]/g, ''), 10) || ELEMENT_HEIGHT;
@@ -361,7 +361,7 @@ function renderMargin(label: string, x: number, y: number, backgroundColor?: str
 /**
  * Render an image
  */
-function renderImage(label: string, x: number, y: number, backgroundColor?: string, properties?: any): string {
+function renderImage(label, x, y, backgroundColor, properties) {
   // The label is used as the image URL
   const imageUrl = label;
   // Get image dimensions from properties or use defaults
@@ -408,7 +408,7 @@ function renderImage(label: string, x: number, y: number, backgroundColor?: stri
 /**
  * Render a generic element
  */
-function renderGenericElement(type: string, label: string, x: number, y: number, backgroundColor?: string): string {
+function renderGenericElement(type, label, x, y, backgroundColor) {
   return `
     <rect 
       x="${x}" 
@@ -441,7 +441,7 @@ function renderGenericElement(type: string, label: string, x: number, y: number,
 /**
  * Render an app bar
  */
-function renderAppbar(label: string, x: number, y: number, screenWidth: number, backgroundColor?: string): string {
+function renderAppbar(label, x, y, screenWidth, backgroundColor) {
   // App bar spans the full width of the screen
   return `
     <rect 
@@ -465,7 +465,7 @@ function renderAppbar(label: string, x: number, y: number, screenWidth: number, 
 /**
  * Render a bottom navigation bar
  */
-function renderBottomNavigationBar(label: string, x: number, y: number, screenWidth: number, backgroundColor?: string, element?: any): string {
+function renderBottomNavigationBar(label, x, y, screenWidth, backgroundColor, element) {
   // Bottom navigation bar spans the full width of the screen
   let svg = `
     <rect 
@@ -484,7 +484,7 @@ function renderBottomNavigationBar(label: string, x: number, y: number, screenWi
     const itemWidth = screenWidth / items.length;
 
     // Render each navigation item
-    items.forEach((item: any, index: number) => {
+    items.forEach((item, index) => {
       const itemX = index * itemWidth;
       svg += renderBottomNavigationItem(item.label, itemX, y, itemWidth, item.properties);
     });
@@ -507,7 +507,7 @@ function renderBottomNavigationBar(label: string, x: number, y: number, screenWi
 /**
  * Render a bottom navigation item
  */
-function renderBottomNavigationItem(label: string, x: number, y: number, width: number, properties?: any): string {
+function renderBottomNavigationItem(label, x, y, width, properties) {
   const isActive = properties?.active === 'true';
   const icon = properties?.icon || '';
   const textColor = isActive ? '#2196F3' : '#757575';
@@ -554,7 +554,7 @@ function renderBottomNavigationItem(label: string, x: number, y: number, width: 
 /**
  * Render a text element with automatic wrapping
  */
-function renderText(text: string, x: number, y: number, screenWidth: number, backgroundColor?: string, properties?: any): string {
+function renderText(text, x, y, screenWidth, backgroundColor, properties) {
   // Get the maximum width for text (with some margin)
   const maxWidth = properties?.width ? parseInt(properties.width, 10) : screenWidth - 40;
 
@@ -566,7 +566,7 @@ function renderText(text: string, x: number, y: number, screenWidth: number, bac
 
   // Split text into words
   const words = text.split(' ');
-  const lines: string[] = [];
+  const lines = [];
   let currentLine = '';
 
   // Create lines of text
@@ -640,7 +640,7 @@ function renderText(text: string, x: number, y: number, screenWidth: number, bac
 /**
  * Render a floating action button
  */
-function renderFloatingActionButton(label: string, x: number, y: number, backgroundColor?: string, screenWidth?: number): string {
+function renderFloatingActionButton(label, x, y, backgroundColor, screenWidth) {
   // Floating action button is circular
   const radius = 30;
 
@@ -672,7 +672,7 @@ function renderFloatingActionButton(label: string, x: number, y: number, backgro
  * @param markdownContent - The Markdown content
  * @returns Array of SVG strings
  */
-export function renderMarkdownSLML(markdownContent: string): string[] {
+export function renderMarkdownSLML(markdownContent) {
   const screens = processMarkdown(markdownContent);
   return screens.map(screen => renderSLMLToSVG(screen));
 }
@@ -683,7 +683,7 @@ export function renderMarkdownSLML(markdownContent: string): string[] {
  * @param markdownContent - The Markdown content
  * @returns Markdown with SLML blocks replaced by SVG
  */
-export function replaceSLMLWithSVG(markdownContent: string): string {
+export function replaceSLMLWithSVG(markdownContent) {
   let result = markdownContent;
   const slmlBlocks = processMarkdown(markdownContent);
   const svgBlocks = slmlBlocks.map(screen => renderSLMLToSVG(screen));

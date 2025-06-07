@@ -1,5 +1,5 @@
 // Import the parser
-import { parseSLML } from './parser.js';
+import { parseSLML } from '../parser.js';
 
 // Test SLML with BottomNavigationBar and multiple BottomNavigationItems
 const testSLML = `Screen: Test Screen
