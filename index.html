@@ -103,32 +103,63 @@
     <div class="example-container">
       <h2>Example SLML Code</h2>
       <div class="example">```slml
-Screen: Flutter UI (width: 393, height: 852, backgroundColor: #f5f5f5)
-- Appbar: My Flutter App { backgroundColor: #2196F3 }
-- Input: Search... { align: center, padding: 20, backgroundColor: #ffffff }
-- Margin: 20px { align: center, width: 300, height: 30 }
-- Image: https://example.com/image.jpg { align: center, width: 200, height: 150 }
-- Button: Submit { align: center, backgroundColor: #4CAF50 }
-- FloatingActionButton: + { align: right }
-- BottomNavigationBar: { backgroundColor: #ffffff }
-  - BottomNavigationItem: Home { icon: 🏠, active: true }
-  - BottomNavigationItem: Search { icon: 🔍 }
-  - BottomNavigationItem: Profile { icon: 👤 }
-  - BottomNavigationItem: Settings { icon: ⚙️ }
+# Flutter UI
+screen:
+  title: "Flutter UI"
+  size: 393, 852
+  backgroundColor: #f5f5f5
+appbar:
+  title: "My Flutter App"
+  backgroundColor: #2196F3
+input:
+  label: "Search..."
+  align: center
+  padding: 20
+  backgroundColor: #ffffff
+margin:
+  width: 300
+  height: 30
+image:
+  url: "https://example.com/image.jpg"
+  align: center
+  width: 200
+  height: 150
+button:
+  label: "Submit"
+  align: center
+  backgroundColor: #4CAF50
+floatingActionButton:
+  label: "+"
+bottomNavigationBar:
+  backgroundColor: #ffffff
+  children:
+    - bottomNavigationItem:
+        label: "Home"
+        icon: 🏠
+        active: true
+    - bottomNavigationItem:
+        label: "Search"
+        icon: 🔍
+    - bottomNavigationItem:
+        label: "Profile"
+        icon: 👤
+    - bottomNavigationItem:
+        label: "Settings"
+        icon: ⚙️
 ```</div>
       <p>Copy this example into the editor and click "Render" to see the SVG output.</p>
       <p>Features:</p>
       <ul>
-        <li>Screen size specification: <code>(width: 393, height: 852)</code></li>
+        <li>Screen size specification: <code>size: 393, 852</code></li>
         <li>Screen background color: <code>backgroundColor: #f5f5f5</code></li>
-        <li>Element alignment: <code>{ align: left|center|right }</code></li>
-        <li>Element padding: <code>{ padding: 20 }</code></li>
-        <li>Element background color: <code>{ backgroundColor: #ffffff }</code></li>
-        <li>Flutter UI components: Appbar, BottomNavigationBar, FloatingActionButton</li>
-        <li>Margin element: <code>Margin: 20px { width: 300, height: 30 }</code> for adding customizable space</li>
-        <li>Image element: <code>Image: url</code> for displaying images</li>
-        <li>BottomNavigationBar with items: <code>BottomNavigationBar: { backgroundColor: #ffffff }</code> followed by indented BottomNavigationItems</li>
-        <li>BottomNavigationItem with icons: <code>  - BottomNavigationItem: Label { icon: 🏠, active: true|false }</code></li>
+        <li>Element alignment: <code>align: left|center|right</code></li>
+        <li>Element padding: <code>padding: 20</code></li>
+        <li>Element background color: <code>backgroundColor: #ffffff</code></li>
+        <li>Flutter UI components: appbar, bottomNavigationBar, floatingActionButton</li>
+        <li>Margin element: <code>margin: width: 300, height: 30</code> for adding customizable space</li>
+        <li>Image element: <code>image: url: "url"</code> for displaying images</li>
+        <li>BottomNavigationBar with items using children property and indentation</li>
+        <li>BottomNavigationItem with icons: <code>icon: 🏠, active: true|false</code></li>
       </ul>
     </div>
   </div>
@@ -151,31 +182,62 @@ Screen: Flutter UI (width: 393, height: 852, backgroundColor: #f5f5f5)
 Below is a Flutter UI screen with custom styling:
 
 \`\`\`slml
-Screen: Flutter UI (width: 393, height: 852, backgroundColor: #f5f5f5)
-- Appbar: My Flutter App { backgroundColor: #2196F3 }
-- Input: Search... { align: center, padding: 20, backgroundColor: #ffffff }
-- Margin: 20px { align: center, width: 300, height: 30 }
-- Image: https://example.com/image.jpg { align: center, width: 200, height: 150 }
-- Button: Submit { align: center, backgroundColor: #4CAF50 }
-- FloatingActionButton: + { align: right }
-- BottomNavigationBar: { backgroundColor: #ffffff }
-  - BottomNavigationItem: Home { icon: 🏠, active: true }
-  - BottomNavigationItem: Search { icon: 🔍 }
-  - BottomNavigationItem: Profile { icon: 👤 }
-  - BottomNavigationItem: Settings { icon: ⚙️ }
+# Flutter UI
+screen:
+  title: "Flutter UI"
+  size: 393, 852
+  backgroundColor: #f5f5f5
+appbar:
+  title: "My Flutter App"
+  backgroundColor: #2196F3
+input:
+  label: "Search..."
+  align: center
+  padding: 20
+  backgroundColor: #ffffff
+margin:
+  width: 300
+  height: 30
+image:
+  url: "https://example.com/image.jpg"
+  align: center
+  width: 200
+  height: 150
+button:
+  label: "Submit"
+  align: center
+  backgroundColor: #4CAF50
+floatingActionButton:
+  label: "+"
+bottomNavigationBar:
+  backgroundColor: #ffffff
+  children:
+    - bottomNavigationItem:
+        label: "Home"
+        icon: 🏠
+        active: true
+    - bottomNavigationItem:
+        label: "Search"
+        icon: 🔍
+    - bottomNavigationItem:
+        label: "Profile"
+        icon: 👤
+    - bottomNavigationItem:
+        label: "Settings"
+        icon: ⚙️
 \`\`\`
 
 This is rendered using the SLML plugin with the following features:
-- Screen size specification: \`(width: 393, height: 852)\`
+- Screen size specification: \`size: 393, 852\`
 - Screen background color: \`backgroundColor: #f5f5f5\`
-- Element alignment: \`{ align: left|center|right }\`
-- Element padding: \`{ padding: 20 }\`
-- Element background color: \`{ backgroundColor: #color }\`
-- Flutter UI components: Appbar, BottomNavigationBar, FloatingActionButton
-- Margin element: \`Margin: 20px { width: 300, height: 30 }\` for adding customizable space
-- Image element: \`Image: url\` for displaying images
-- BottomNavigationBar with items: \`BottomNavigationBar: { backgroundColor: #ffffff }\` followed by indented BottomNavigationItems
-- BottomNavigationItem with icons: \`  - BottomNavigationItem: Label { icon: 🏠, active: true|false }\`
+- Element alignment: \`align: left|center|right\`
+- Element padding: \`padding: 20\`
+- Element background color: \`backgroundColor: #color\`
+- Flutter UI components: appbar, bottomNavigationBar, floatingActionButton
+- Margin element: \`margin: width: 300, height: 30\` for adding customizable space
+- Image element: \`image: url: "url"\` for displaying images
+- BottomNavigationBar with items using children property and indentation
+- BottomNavigationItem with icons: \`icon: 🏠, active: true|false\`
 `;
 
     // Render the markdown with SLML
@@ -214,12 +276,27 @@ This is rendered using the SLML plugin with the following features:
 
       // Test BottomNavigationItem parsing
       console.log("Testing BottomNavigationItem parsing...");
-      const testSLML = `Screen: Test Screen
-- BottomNavigationBar: Navigation { backgroundColor: #ffffff }
-  - BottomNavigationItem: Home { icon: 🏠, active: true }
-  - BottomNavigationItem: Search { icon: 🔍 }
-  - BottomNavigationItem: Profile { icon: 👤 }
-  - BottomNavigationItem: Settings { icon: ⚙️ }`;
+      const testSLML = `# Test Screen
+screen:
+  title: "Test Screen"
+
+bottomNavigationBar:
+  label: "Navigation"
+  backgroundColor: #ffffff
+  children:
+    - bottomNavigationItem:
+        label: "Home"
+        icon: 🏠
+        active: true
+    - bottomNavigationItem:
+        label: "Search"
+        icon: 🔍
+    - bottomNavigationItem:
+        label: "Profile"
+        icon: 👤
+    - bottomNavigationItem:
+        label: "Settings"
+        icon: ⚙️`;
 
       const parsedScreen = processMarkdown(testSLML)[0];
       console.log('Parsed Screen:', parsedScreen);

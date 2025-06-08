@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Elements Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    .test-case {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .test-case h2 {
+      margin-top: 0;
+      color: #3498db;
+    }
+    .code {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+    .result {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      min-height: 200px;
+    }
+    .parsed-data {
+      background-color: #f8f8f8;
+      padding: 15px;
+      border-radius: 4px;
+      margin-top: 10px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      overflow: auto;
+      max-height: 300px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>All Elements Test</h1>
+    <p>This page tests all UI element types mentioned in the README with the new indented syntax format.</p>
+
+    <div class="test-case">
+      <h2>Test Case: All Elements</h2>
+      <div class="code">```slml
+# All Elements Test
+screen:
+  title: "All Elements Test"
+  size: 400, 800
+  backgroundColor: #f5f5f5
+
+appbar:
+  title: "All Elements"
+  backgroundColor: #2196F3
+  showBackButton: true
+  centerTitle: true
+  actionIcons: 🔍|⚙️|👤
+
+input:
+  label: "Username"
+  align: center
+  backgroundColor: #ffffff
+
+button:
+  label: "Submit"
+  align: center
+  backgroundColor: #4CAF50
+
+checkbox:
+  label: "Remember me"
+  checked: true
+  align: center
+
+link:
+  label: "Forgot Password?"
+  align: center
+
+text:
+  content: "This is a text element with automatic wrapping. It should wrap to multiple lines if the content is too long for a single line."
+  width: 300
+  fontSize: 16
+  color: #333333
+  align: center
+
+image:
+  url: "https://example.com/image.jpg"
+  width: 200
+  height: 150
+  align: center
+
+floatingActionButton:
+  label: "+"
+  backgroundColor: #FF4081
+  align: right
+
+margin:
+  height: 20
+  width: 300
+
+bottomNavigationBar:
+  backgroundColor: #ffffff
+  children:
+    - bottomNavigationItem:
+        label: "Home"
+        icon: 🏠
+        active: true
+    - bottomNavigationItem:
+        label: "Search"
+        icon: 🔍
+    - bottomNavigationItem:
+        label: "Profile"
+        icon: 👤
+    - bottomNavigationItem:
+        label: "Settings"
+        icon: ⚙️
+```</div>
+      <div class="result" id="result1"></div>
+      <h3>Parsed Data:</h3>
+      <div class="parsed-data" id="parsed-data1"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Import the parser and renderer
+    import { parseSLML, processMarkdown } from '../parser.js';
+    import { renderSLMLToSVG } from '../renderer.js';
+
+    // Test case
+    const testCase = {
+      id: 'result1',
+      slml: `# All Elements Test
+screen:
+  title: "All Elements Test"
+  size: 400, 800
+  backgroundColor: #f5f5f5
+
+appbar:
+  title: "All Elements"
+  backgroundColor: #2196F3
+  showBackButton: true
+  centerTitle: true
+  actionIcons: 🔍|⚙️|👤
+
+input:
+  label: "Username"
+  align: center
+  backgroundColor: #ffffff
+
+button:
+  label: "Submit"
+  align: center
+  backgroundColor: #4CAF50
+
+checkbox:
+  label: "Remember me"
+  checked: true
+  align: center
+
+link:
+  label: "Forgot Password?"
+  align: center
+
+text:
+  content: "This is a text element with automatic wrapping. It should wrap to multiple lines if the content is too long for a single line."
+  width: 300
+  fontSize: 16
+  color: #333333
+  align: center
+
+image:
+  url: "https://example.com/image.jpg"
+  width: 200
+  height: 150
+  align: center
+
+floatingActionButton:
+  label: "+"
+  backgroundColor: #FF4081
+  align: right
+
+margin:
+  height: 20
+  width: 300
+
+bottomNavigationBar:
+  backgroundColor: #ffffff
+  children:
+    - bottomNavigationItem:
+        label: "Home"
+        icon: 🏠
+        active: true
+    - bottomNavigationItem:
+        label: "Search"
+        icon: 🔍
+    - bottomNavigationItem:
+        label: "Profile"
+        icon: 👤
+    - bottomNavigationItem:
+        label: "Settings"
+        icon: ⚙️`
+    };
+
+    // Render the test case
+    window.addEventListener('DOMContentLoaded', () => {
+      try {
+        // Parse the SLML
+        const parsedScreen = processMarkdown(testCase.slml)[0];
+        
+        // Display the parsed data
+        document.getElementById('parsed-data1').textContent = JSON.stringify(parsedScreen, null, 2);
+        
+        // Render the SVG
+        const svg = renderSLMLToSVG(parsedScreen, 0.6);
+        document.getElementById(testCase.id).innerHTML = svg;
+        
+        console.log('Parsed Screen:', parsedScreen);
+      } catch (error) {
+        document.getElementById(testCase.id).innerHTML = `<div style="color: red;">Error: ${error.message}</div>`;
+        document.getElementById('parsed-data1').textContent = error.stack;
+        console.error('Error parsing or rendering:', error);
+      }
+    });
+  </script>
+</body>
+</html>

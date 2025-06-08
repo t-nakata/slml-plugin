@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image URL Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    .test-case {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .test-case h2 {
+      margin-top: 0;
+      color: #3498db;
+    }
+    .code {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+    .result {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      min-height: 200px;
+    }
+    .parsed-data {
+      background-color: #f8f8f8;
+      padding: 15px;
+      border-radius: 4px;
+      margin-top: 10px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      overflow: auto;
+      max-height: 300px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Image URL Test</h1>
+    <p>This page tests the rendering of images with URL specified as a property.</p>
+
+    <div class="test-case">
+      <h2>Test Case 1: Image with URL as Property</h2>
+      <div class="code">```slml
+# Image Test
+screen:
+  title: "Image Test"
+  size: 400, 600
+  backgroundColor: #f5f5f5
+
+image:
+  url: "https://example.com/image.jpg"
+  align: center
+  width: 200
+  height: 150
+```</div>
+      <div class="result" id="result1"></div>
+      <h3>Parsed Data:</h3>
+      <div class="parsed-data" id="parsed-data1"></div>
+    </div>
+
+    <div class="test-case">
+      <h2>Test Case 2: Image with URL as Label</h2>
+      <div class="code">```slml
+# Image Test
+screen:
+  title: "Image Test"
+  size: 400, 600
+  backgroundColor: #f5f5f5
+
+image: https://example.com/image.jpg
+  align: center
+  width: 200
+  height: 150
+```</div>
+      <div class="result" id="result2"></div>
+      <h3>Parsed Data:</h3>
+      <div class="parsed-data" id="parsed-data2"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Import the parser and renderer
+    import { parseSLML, processMarkdown } from '../parser.js';
+    import { renderSLMLToSVG } from '../renderer.js';
+
+    // Test cases
+    const testCases = [
+      {
+        id: 'result1',
+        dataId: 'parsed-data1',
+        slml: `# Image Test
+screen:
+  title: "Image Test"
+  size: 400, 600
+  backgroundColor: #f5f5f5
+
+image:
+  url: "https://example.com/image.jpg"
+  align: center
+  width: 200
+  height: 150`
+      },
+      {
+        id: 'result2',
+        dataId: 'parsed-data2',
+        slml: `# Image Test
+screen:
+  title: "Image Test"
+  size: 400, 600
+  backgroundColor: #f5f5f5
+
+image: https://example.com/image.jpg
+  align: center
+  width: 200
+  height: 150`
+      }
+    ];
+
+    // Render the test cases
+    window.addEventListener('DOMContentLoaded', () => {
+      testCases.forEach(testCase => {
+        try {
+          // Parse the SLML
+          const parsedScreen = processMarkdown(testCase.slml)[0];
+          
+          // Display the parsed data
+          document.getElementById(testCase.dataId).textContent = JSON.stringify(parsedScreen, null, 2);
+          
+          // Render the SVG
+          const svg = renderSLMLToSVG(parsedScreen, 0.6);
+          document.getElementById(testCase.id).innerHTML = svg;
+          
+          console.log(`Parsed Screen for ${testCase.id}:`, parsedScreen);
+        } catch (error) {
+          document.getElementById(testCase.id).innerHTML = `<div style="color: red;">Error: ${error.message}</div>`;
+          document.getElementById(testCase.dataId).textContent = error.stack;
+          console.error(`Error parsing or rendering ${testCase.id}:`, error);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

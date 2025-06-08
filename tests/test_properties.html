@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Properties Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    .test-case {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .test-case h2 {
+      margin-top: 0;
+      color: #3498db;
+    }
+    .code {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+    .result {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      min-height: 200px;
+    }
+    .parsed-data {
+      background-color: #f8f8f8;
+      padding: 15px;
+      border-radius: 4px;
+      margin-top: 10px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      overflow: auto;
+      max-height: 300px;
+    }
+    .test-result {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .failure {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Properties Test</h1>
+    <p>This page tests that properties are stored directly on the element objects, not in a properties object.</p>
+
+    <div class="test-case">
+      <h2>Test Case: Element Properties</h2>
+      <div class="code">```slml
+# Properties Test
+screen:
+  title: "Properties Test"
+  size: 400, 600
+  backgroundColor: #f5f5f5
+
+appbar:
+  title: "Test App"
+  backgroundColor: #2196F3
+  showBackButton: true
+  centerTitle: true
+
+button:
+  label: "Click Me"
+  align: center
+  backgroundColor: #4CAF50
+
+bottomNavigationBar:
+  backgroundColor: #ffffff
+  children:
+    - bottomNavigationItem:
+        label: "Home"
+        icon: 🏠
+        active: true
+    - bottomNavigationItem:
+        label: "Settings"
+        icon: ⚙️
+```</div>
+      <div class="result" id="result1"></div>
+      <h3>Parsed Data:</h3>
+      <div class="parsed-data" id="parsed-data1"></div>
+      <h3>Test Results:</h3>
+      <div id="test-results"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Import the parser and renderer
+    import { parseSLML, processMarkdown } from '../parser.js';
+    import { renderSLMLToSVG } from '../renderer.js';
+
+    // Test case
+    const testCase = {
+      id: 'result1',
+      slml: `# Properties Test
+screen:
+  title: "Properties Test"
+  size: 400, 600
+  backgroundColor: #f5f5f5
+
+appbar:
+  title: "Test App"
+  backgroundColor: #2196F3
+  showBackButton: true
+  centerTitle: true
+
+button:
+  label: "Click Me"
+  align: center
+  backgroundColor: #4CAF50
+
+bottomNavigationBar:
+  backgroundColor: #ffffff
+  children:
+    - bottomNavigationItem:
+        label: "Home"
+        icon: 🏠
+        active: true
+    - bottomNavigationItem:
+        label: "Settings"
+        icon: ⚙️`
+    };
+
+    // Render the test case
+    window.addEventListener('DOMContentLoaded', () => {
+      try {
+        // Parse the SLML
+        const parsedScreen = processMarkdown(testCase.slml)[0];
+        
+        // Display the parsed data
+        document.getElementById('parsed-data1').textContent = JSON.stringify(parsedScreen, null, 2);
+        
+        // Render the SVG
+        const svg = renderSLMLToSVG(parsedScreen, 0.6);
+        document.getElementById(testCase.id).innerHTML = svg;
+        
+        console.log('Parsed Screen:', parsedScreen);
+
+        // Test that properties are stored directly on the element objects
+        const testResults = document.getElementById('test-results');
+        let allTestsPassed = true;
+        let testResultsHTML = '';
+
+        // Test 1: Check if appbar properties are directly on the element
+        const appbar = parsedScreen.elements.find(el => el.type.toLowerCase() === 'appbar');
+        if (appbar && appbar.backgroundColor && appbar.showBackButton !== undefined && appbar.centerTitle !== undefined) {
+          testResultsHTML += '<div class="test-result success">✅ AppBar properties are directly on the element</div>';
+        } else {
+          testResultsHTML += '<div class="test-result failure">❌ AppBar properties are not directly on the element</div>';
+          allTestsPassed = false;
+        }
+
+        // Test 2: Check if button properties are directly on the element
+        const button = parsedScreen.elements.find(el => el.type.toLowerCase() === 'button');
+        if (button && button.align && button.backgroundColor) {
+          testResultsHTML += '<div class="test-result success">✅ Button properties are directly on the element</div>';
+        } else {
+          testResultsHTML += '<div class="test-result failure">❌ Button properties are not directly on the element</div>';
+          allTestsPassed = false;
+        }
+
+        // Test 3: Check if bottomNavigationBar properties are directly on the element
+        const bottomNavBar = parsedScreen.elements.find(el => el.type.toLowerCase() === 'bottomnavigationbar');
+        if (bottomNavBar && bottomNavBar.backgroundColor) {
+          testResultsHTML += '<div class="test-result success">✅ BottomNavigationBar properties are directly on the element</div>';
+        } else {
+          testResultsHTML += '<div class="test-result failure">❌ BottomNavigationBar properties are not directly on the element</div>';
+          allTestsPassed = false;
+        }
+
+        // Test 4: Check if bottomNavigationItem properties are directly on the element
+        if (bottomNavBar && bottomNavBar.children && bottomNavBar.children.length > 0) {
+          const item = bottomNavBar.children[0];
+          if (item && item.icon && item.active !== undefined) {
+            testResultsHTML += '<div class="test-result success">✅ BottomNavigationItem properties are directly on the element</div>';
+          } else {
+            testResultsHTML += '<div class="test-result failure">❌ BottomNavigationItem properties are not directly on the element</div>';
+            allTestsPassed = false;
+          }
+        } else {
+          testResultsHTML += '<div class="test-result failure">❌ BottomNavigationBar has no children or is missing</div>';
+          allTestsPassed = false;
+        }
+
+        // Display overall result
+        if (allTestsPassed) {
+          testResultsHTML = '<div class="test-result success">✅ All tests passed! Properties are stored directly on the element objects.</div>' + testResultsHTML;
+        } else {
+          testResultsHTML = '<div class="test-result failure">❌ Some tests failed. Check the details below.</div>' + testResultsHTML;
+        }
+
+        testResults.innerHTML = testResultsHTML;
+      } catch (error) {
+        document.getElementById(testCase.id).innerHTML = `<div style="color: red;">Error: ${error.message}</div>`;
+        document.getElementById('parsed-data1').textContent = error.stack;
+        document.getElementById('test-results').innerHTML = `<div class="test-result failure">❌ Error: ${error.message}</div>`;
+        console.error('Error parsing or rendering:', error);
+      }
+    });
+  </script>
+</body>
+</html>

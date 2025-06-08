@@ -42,53 +42,29 @@ SLML (Screen Layout Markup Language) is a simple markup language for describing 
 
 ## SLML Syntax
 
-SLML supports two syntax formats: the original dash-based syntax and a new indented syntax.
-
-### Original Syntax
-
-The original syntax uses dashes to define elements and curly braces for properties:
-
-```
-Screen: Screen Title (width: W, height: H, backgroundColor: color)
-- ElementType: Label { align: left|center|right, padding: N, backgroundColor: color, ...other properties }
-- ElementType: Label
-...
-```
-
-Where:
-- `Screen: Screen Title` defines the title of the screen
-- `(width: W, height: H, backgroundColor: color)` optionally specifies the screen dimensions and background color
-- Each element is defined with a dash (`-`) followed by the element type, a colon (`:`), and the label
-- Element properties are specified in curly braces `{ property: value, ... }`
-
-### New Indented Syntax
-
-The new syntax uses indentation to define properties and child elements, with sections separated by `---`:
+SLML uses indentation to define properties and child elements:
 
 ```
 # Screen Title
 screen:
-    title: "Screen Title"
-    size: W, H
-    backgroundColor: color
----
+  title: "Screen Title"
+  size: W, H
+  backgroundColor: color
 elementType:
-    property1: value1
-    property2: value2
-    children:
-        - childElementType:
-            property1: value1
-            property2: value2
----
+  property1: value1
+  property2: value2
+  children:
+    - childElementType:
+      property1: value1
+      property2: value2
 anotherElementType:
-    property1: value1
-    property2: value2
+  property1: value1
+  property2: value2
 ```
 
 Where:
 - The first line can optionally start with `#` followed by a comment (often used for the screen title)
 - The first section typically defines the screen properties
-- Each section is separated by `---`
 - Element properties are indented under the element type
 - Child elements are indented under a `children:` property
 - Actions (like in AppBar) are defined under an `actions:` property
@@ -205,76 +181,123 @@ Where:
 SLMLはMaterial Design 3のテーマシステムをサポートしています：
 
 ```slml
-Screen: アカウント作成
-- Input: メールアドレス
-- Input: パスワード
-- Input: パスワード確認
-- Input: ユーザー名
-- Checkbox: 利用規約に同意
-- Button: アカウント作成
-- Link: ログインはこちら
+# アカウント作成
+screen:
+  title: "アカウント作成"
+input:
+  label: "メールアドレス"
+input:
+  label: "パスワード"
+input:
+  label: "パスワード確認"
+input:
+  label: "ユーザー名"
+checkbox:
+  label: "利用規約に同意"
+button:
+  label: "アカウント作成"
+link:
+  label: "ログインはこちら"
 ```
 
 Example with screen size and element alignment:
 
 ```slml
-Screen: アカウント作成 (width: 393, height: 852)
-- Input: メールアドレス { align: center }
-- Input: パスワード { align: left }
-- Input: パスワード確認 { align: right }
-- Button: 登録する { align: center }
-- Link: ログインはこちら { align: center }
+# アカウント作成
+screen:
+  title: "アカウント作成"
+  size: 393, 852
+input:
+  label: "メールアドレス"
+  align: center
+input:
+  label: "パスワード"
+  align: left
+input:
+  label: "パスワード確認"
+  align: right
+button:
+  label: "登録する"
+  align: center
+link:
+  label: "ログインはこちら"
+  align: center
 ```
 
 Example with text wrapping and custom font properties:
 
 ```slml
-Screen: Text Example (width: 393, height: 852, backgroundColor: #f5f5f5)
-- Text: This is a long text that will automatically wrap to multiple lines based on the available width. { width: 300, fontSize: 16, color: #333333 }
+# Text Example
+screen:
+  title: "Text Example"
+  size: 393, 852
+  backgroundColor: "#f5f5f5"
+text:
+  content: "This is a long text that will automatically wrap to multiple lines based on the available width."
+  width: 300
+  fontSize: 16
+  color: "#333333"
 ```
 
 Example with Flutter UI components, background colors, and padding:
 
 ```slml
-Screen: Flutter UI (width: 393, height: 852, backgroundColor: #f5f5f5)
-- Appbar: My Flutter App { backgroundColor: #2196F3, centerTitle: true, showBackButton: true, actionIcons: 🔍|⚙️ }
-- Input: Search... { align: center, padding: 20, backgroundColor: #ffffff }
-- Button: Submit { align: center, backgroundColor: #4CAF50 }
-- FloatingActionButton: + { align: right }
-- BottomNavigationBar: Navigation { backgroundColor: #ffffff }
+# Flutter UI
+screen:
+  title: "Flutter UI"
+  size: 393, 852
+  backgroundColor: "#f5f5f5"
+appbar:
+  title: "My Flutter App"
+  backgroundColor: "#2196F3"
+  centerTitle: true
+  showBackButton: true
+  actionIcons: "🔍|⚙️"
+input:
+  label: "Search..."
+  align: center
+  padding: 20
+  backgroundColor: "#ffffff"
+button:
+  label: "Submit"
+  align: center
+  backgroundColor: "#4CAF50"
+floatingActionButton:
+  label: "+"
+  align: right
+bottomNavigationBar:
+  label: "Navigation"
+  backgroundColor: "#ffffff"
 ```
 
-### New Indented Syntax Examples
+### Examples
 
 User profile example:
 
 ```slml
 # ユーザープロフィール画面
 screen:
-    title: "プロフィール"
-    size: 360, 740
----
+  title: "プロフィール"
+  size: 360, 740
 appbar:
-    title: "My Profile"
-    navIcon: "arrow_back"
-    actions:
-        - icon: "edit"
----
+  title: "My Profile"
+  navIcon: "arrow_back"
+  actions:
+    - icon: "edit"
 card:
-    children:
-        - listitem:
-            leading:
-                icon: "person"
-            primaryText: "田中 太郎"
-            secondaryText: "プロジェクトマネージャー"
-        - divider:
-        - text:
-            content: "進捗管理とチームの調整を担当しています。趣味は週末のキャンプです。"
----
+  children:
+    - listitem:
+      leading:
+        icon: "person"
+      primaryText: "田中 太郎"
+        secondaryText: "プロジェクトマネージャー"
+    - divider:
+    - text:
+      content: "進捗管理とチームの調整を担当しています。趣味は週末のキャンプです。"
 button:
-    label: "アカウント設定"
-    style: "filled"
-    leadingIcon: "settings"
+  label: "アカウント設定"
+  style: "filled"
+  leadingIcon: "settings"
 ```
 
 Login form example:
@@ -282,30 +305,25 @@ Login form example:
 ```slml
 # ログインフォーム
 screen:
-    title: "ログイン"
-    size: 360, 640
-    backgroundColor: "#f5f5f5"
----
+  title: "ログイン"
+  size: 360, 640
+  backgroundColor: "#f5f5f5"
 appbar:
-    title: "ログイン"
-    centerTitle: true
----
+  title: "ログイン"
+  centerTitle: true
 text:
-    content: "アカウント情報を入力してください"
-    align: center
----
+  content: "アカウント情報を入力してください"
+  align: center
 input:
-    label: "メールアドレス"
-    align: center
----
+  label: "メールアドレス"
+  align: center
 input:
-    label: "パスワード"
-    align: center
----
+  label: "パスワード"
+  align: center
 button:
-    label: "ログイン"
-    style: "filled"
-    align: center
+  label: "ログイン"
+  style: "filled"
+  align: center
 ```
 
 ## Usage
@@ -320,11 +338,17 @@ To use SLML in your Markdown files, simply create a code block with the `slml` l
 Here's a UI screen:
 
 ```slml
-Screen: Login
-- Input: Username
-- Input: Password
-- Button: Login
-- Link: Forgot Password?
+# Login
+screen:
+  title: "Login"
+input:
+  label: "Username"
+input:
+  label: "Password"
+button:
+  label: "Login"
+link:
+  label: "Forgot Password?"
 ```
 ````
 
