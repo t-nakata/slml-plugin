@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New SLML Syntax Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    .test-case {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .test-case h2 {
+      margin-top: 0;
+      color: #3498db;
+    }
+    .code {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+    .result {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      min-height: 200px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>New SLML Syntax Test</h1>
+    <p>This page tests the new indented syntax format for SLML.</p>
+
+    <div class="test-case">
+      <h2>Test Case 1: User Profile Example</h2>
+      <div class="code">```slml
+# ユーザープロフィール画面
+screen:
+    title: "プロフィール"
+    size: 360, 740
+---
+appbar:
+    title: "My Profile"
+    navIcon: "arrow_back"
+    actions:
+        - icon: "edit"
+---
+card:
+    children:
+        - listitem:
+            leading:
+                icon: "person"
+            primaryText: "田中 太郎"
+            secondaryText: "プロジェクトマネージャー"
+        - divider:
+        - text:
+            content: "進捗管理とチームの調整を担当しています。趣味は週末のキャンプです。"
+---
+button:
+    label: "アカウント設定"
+    style: "filled"
+    leadingIcon: "settings"
+```</div>
+      <div class="result" id="result1"></div>
+    </div>
+
+    <div class="test-case">
+      <h2>Test Case 2: Simple Form Example</h2>
+      <div class="code">```slml
+# ログインフォーム
+screen:
+    title: "ログイン"
+    size: 360, 640
+    backgroundColor: "#f5f5f5"
+---
+appbar:
+    title: "ログイン"
+    centerTitle: true
+---
+text:
+    content: "アカウント情報を入力してください"
+    align: center
+---
+input:
+    label: "メールアドレス"
+    align: center
+---
+input:
+    label: "パスワード"
+    align: center
+---
+button:
+    label: "ログイン"
+    style: "filled"
+    align: center
+---
+text:
+    content: "アカウントをお持ちでない場合は登録してください"
+    align: center
+    fontSize: 12
+---
+button:
+    label: "新規登録"
+    style: "outlined"
+    align: center
+```</div>
+      <div class="result" id="result2"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Import the parser and renderer
+    import { replaceSLMLWithSVG } from '../renderer.js';
+
+    // Test cases
+    const testCases = [
+      {
+        id: 'result1',
+        slml: `# ユーザープロフィール画面
+screen:
+    title: "プロフィール"
+    size: 360, 740
+---
+appbar:
+    title: "My Profile"
+    navIcon: "arrow_back"
+    actions:
+        - icon: "edit"
+---
+card:
+    children:
+        - listitem:
+            leading:
+                icon: "person"
+            primaryText: "田中 太郎"
+            secondaryText: "プロジェクトマネージャー"
+        - divider:
+        - text:
+            content: "進捗管理とチームの調整を担当しています。趣味は週末のキャンプです。"
+---
+button:
+    label: "アカウント設定"
+    style: "filled"
+    leadingIcon: "settings"`
+      },
+      {
+        id: 'result2',
+        slml: `# ログインフォーム
+screen:
+    title: "ログイン"
+    size: 360, 640
+    backgroundColor: "#f5f5f5"
+---
+appbar:
+    title: "ログイン"
+    centerTitle: true
+---
+text:
+    content: "アカウント情報を入力してください"
+    align: center
+---
+input:
+    label: "メールアドレス"
+    align: center
+---
+input:
+    label: "パスワード"
+    align: center
+---
+button:
+    label: "ログイン"
+    style: "filled"
+    align: center
+---
+text:
+    content: "アカウントをお持ちでない場合は登録してください"
+    align: center
+    fontSize: 12
+---
+button:
+    label: "新規登録"
+    style: "outlined"
+    align: center`
+      }
+    ];
+
+    // Render each test case
+    window.addEventListener('DOMContentLoaded', () => {
+      testCases.forEach(testCase => {
+        const resultElement = document.getElementById(testCase.id);
+        if (resultElement) {
+          try {
+            const svg = replaceSLMLWithSVG(testCase.slml, 0.6);
+            resultElement.innerHTML = svg;
+          } catch (error) {
+            resultElement.innerHTML = `<div style="color: red;">Error: ${error.message}</div>`;
+            console.error(`Error rendering ${testCase.id}:`, error);
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

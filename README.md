@@ -13,6 +13,9 @@ SLML (Screen Layout Markup Language) is a simple markup language for describing 
 - Padding control between elements
 - Text wrapping with custom width and font size
 - Image sizing and alignment
+- Material Design 3テーマサポート
+- レスポンシブレイアウト対応
+- インタラクション・アニメーション定義
 - Support for various UI elements:
   - Input fields
   - Buttons
@@ -24,10 +27,26 @@ SLML (Screen Layout Markup Language) is a simple markup language for describing 
   - BottomNavigationBar (with items and icons)
   - FloatingActionButton
   - Margin (for spacing)
+  - Tabs (タブナビゲーション)
+  - Chips (チップ)
+  - Snackbar (スナックバー)
+  - Dialog (ダイアログ)
+  - Progress indicators (進行状況インジケーター)
+  - Slider (スライダー)
+  - Date & Time pickers (日付・時間選択)
+  - Radio buttons (ラジオボタン)
+  - Switch (スイッチ)
+  - Badge (バッジ)
+  - Expansion panel (展開パネル)
+  - Navigation drawer (ナビゲーションドロワー)
 
 ## SLML Syntax
 
-SLML uses a simple syntax to describe UI screens:
+SLML supports two syntax formats: the original dash-based syntax and a new indented syntax.
+
+### Original Syntax
+
+The original syntax uses dashes to define elements and curly braces for properties:
 
 ```
 Screen: Screen Title (width: W, height: H, backgroundColor: color)
@@ -42,18 +61,50 @@ Where:
 - Each element is defined with a dash (`-`) followed by the element type, a colon (`:`), and the label
 - Element properties are specified in curly braces `{ property: value, ... }`
 
+### New Indented Syntax
+
+The new syntax uses indentation to define properties and child elements, with sections separated by `---`:
+
+```
+# Screen Title
+screen:
+    title: "Screen Title"
+    size: W, H
+    backgroundColor: color
+---
+elementType:
+    property1: value1
+    property2: value2
+    children:
+        - childElementType:
+            property1: value1
+            property2: value2
+---
+anotherElementType:
+    property1: value1
+    property2: value2
+```
+
+Where:
+- The first line can optionally start with `#` followed by a comment (often used for the screen title)
+- The first section typically defines the screen properties
+- Each section is separated by `---`
+- Element properties are indented under the element type
+- Child elements are indented under a `children:` property
+- Actions (like in AppBar) are defined under an `actions:` property
+
 ### Common Element Properties
 
-These properties are supported by most elements:
+これらのプロパティは多くの要素でサポートされています：
 
-- `align: left|center|right` - Specifies the element's horizontal alignment (default is `center`)
-- `padding: N` - Specifies the padding above the element in pixels
-- `backgroundColor: color` - Specifies the background color of the element
+- `align: left|center|right` - 要素の水平方向の配置を指定します（デフォルトは `center`）
+- `backgroundColor: color` - 要素の背景色を指定します
+- `children` - 子要素のリストを含むことができます
 
-Alignment rules:
-- `left`: Element is positioned at x = 16px from the left edge
-- `center`: Element is centered horizontally (default)
-- `right`: Element is positioned at x = (screenWidth - elementWidth - 16) from the left edge
+配置ルール：
+- `left`: 要素は左端からx = 16pxの位置に配置されます
+- `center`: 要素は水平方向に中央揃えされます（デフォルト）
+- `right`: 要素は左端からx = (screenWidth - elementWidth - 16)の位置に配置されます
 
 ### Element-Specific Properties
 
@@ -85,9 +136,73 @@ Alignment rules:
 - `width`: Width of the margin in pixels
 - `height`: Height of the margin in pixels
 
-## Examples
+#### Tabs
+- `variant`: タブの表示タイプ (fixed/scrollable)
+- `selectedIndex`: 選択されているタブのインデックス
+- `labels`: タブのラベルリスト (パイプ区切り e.g. "タブ1|タブ2|タブ3")
 
-Basic example:
+#### Chips
+- `type`: チップのタイプ (assist/filter/input/suggestion)
+- `selected`: 選択状態 (true/false)
+- `icon`: チップに表示するアイコン
+- `onDelete`: 削除可能かどうか (true/false)
+
+#### Snackbar
+- `message`: スナックバーに表示するメッセージ
+- `action`: アクションボタンのテキスト
+- `duration`: 表示時間（ミリ秒）
+
+#### Dialog
+- `title`: ダイアログのタイトル
+- `content`: ダイアログの内容
+- `actions`: アクションボタンのリスト (パイプ区切り e.g. "キャンセル|OK")
+
+#### ProgressIndicator
+- `type`: インジケーターのタイプ (linear/circular)
+- `determinate`: 決定的または不確定 (true/false)
+- `value`: 進行状況の値 (0.0〜1.0)
+- `color`: インジケーターの色
+
+#### Slider
+- `min`: 最小値
+- `max`: 最大値
+- `value`: 現在の値
+- `step`: ステップ値
+
+#### DatePicker
+- `initialDate`: 初期日付
+- `format`: 日付の表示フォーマット
+- `mode`: 表示モード (calendar/spinner)
+
+#### TimePicker
+- `initialTime`: 初期時間
+- `format`: 時間の表示フォーマット (12h/24h)
+
+#### RadioButton
+- `group`: ラジオボタンのグループ名
+- `selected`: 選択状態 (true/false)
+
+#### Switch
+- `checked`: オン/オフ状態 (true/false)
+
+#### Badge
+- `value`: バッジに表示する値
+- `color`: バッジの色
+- `position`: バッジの位置 (topRight/topLeft/bottomRight/bottomLeft)
+
+#### ExpansionPanel
+- `expanded`: 展開状態 (true/false)
+- `title`: パネルのタイトル
+
+#### NavigationDrawer
+- `variant`: ドロワーのタイプ (modal/standard)
+- `items`: ドロワー内の項目リスト
+
+## Advanced Features
+
+### Theme Support
+
+SLMLはMaterial Design 3のテーマシステムをサポートしています：
 
 ```slml
 Screen: アカウント作成
@@ -127,6 +242,70 @@ Screen: Flutter UI (width: 393, height: 852, backgroundColor: #f5f5f5)
 - Button: Submit { align: center, backgroundColor: #4CAF50 }
 - FloatingActionButton: + { align: right }
 - BottomNavigationBar: Navigation { backgroundColor: #ffffff }
+```
+
+### New Indented Syntax Examples
+
+User profile example:
+
+```slml
+# ユーザープロフィール画面
+screen:
+    title: "プロフィール"
+    size: 360, 740
+---
+appbar:
+    title: "My Profile"
+    navIcon: "arrow_back"
+    actions:
+        - icon: "edit"
+---
+card:
+    children:
+        - listitem:
+            leading:
+                icon: "person"
+            primaryText: "田中 太郎"
+            secondaryText: "プロジェクトマネージャー"
+        - divider:
+        - text:
+            content: "進捗管理とチームの調整を担当しています。趣味は週末のキャンプです。"
+---
+button:
+    label: "アカウント設定"
+    style: "filled"
+    leadingIcon: "settings"
+```
+
+Login form example:
+
+```slml
+# ログインフォーム
+screen:
+    title: "ログイン"
+    size: 360, 640
+    backgroundColor: "#f5f5f5"
+---
+appbar:
+    title: "ログイン"
+    centerTitle: true
+---
+text:
+    content: "アカウント情報を入力してください"
+    align: center
+---
+input:
+    label: "メールアドレス"
+    align: center
+---
+input:
+    label: "パスワード"
+    align: center
+---
+button:
+    label: "ログイン"
+    style: "filled"
+    align: center
 ```
 
 ## Usage
