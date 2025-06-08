@@ -11,15 +11,19 @@ SLML (Screen Layout Markup Language) is a simple markup language for describing 
 - Element alignment control (left, center, right)
 - Background color customization for screens and elements
 - Padding control between elements
+- Text wrapping with custom width and font size
+- Image sizing and alignment
 - Support for various UI elements:
   - Input fields
   - Buttons
   - Checkboxes
   - Links
-  - Appbar
-  - BottomNavigationBar
+  - Text with automatic wrapping
+  - Images
+  - Appbar (with back button, centered title, and action icons)
+  - BottomNavigationBar (with items and icons)
   - FloatingActionButton
-  - And more...
+  - Margin (for spacing)
 
 ## SLML Syntax
 
@@ -27,7 +31,7 @@ SLML uses a simple syntax to describe UI screens:
 
 ```
 Screen: Screen Title (width: W, height: H, backgroundColor: color)
-- ElementType: Label { align: left|center|right, padding: N, backgroundColor: color }
+- ElementType: Label { align: left|center|right, padding: N, backgroundColor: color, ...other properties }
 - ElementType: Label
 ...
 ```
@@ -38,7 +42,10 @@ Where:
 - Each element is defined with a dash (`-`) followed by the element type, a colon (`:`), and the label
 - Element properties are specified in curly braces `{ property: value, ... }`
 
-Element properties:
+### Common Element Properties
+
+These properties are supported by most elements:
+
 - `align: left|center|right` - Specifies the element's horizontal alignment (default is `center`)
 - `padding: N` - Specifies the padding above the element in pixels
 - `backgroundColor: color` - Specifies the background color of the element
@@ -48,7 +55,37 @@ Alignment rules:
 - `center`: Element is centered horizontally (default)
 - `right`: Element is positioned at x = (screenWidth - elementWidth - 16) from the left edge
 
-Examples:
+### Element-Specific Properties
+
+#### Text
+- `width`: Maximum width of the text block in pixels
+- `fontSize`: Font size in pixels (default: 14)
+- `color`: Text color (default: #212529)
+
+#### Image
+- `width`: Width of the image in pixels
+- `height`: Height of the image in pixels
+
+#### Appbar
+- `backgroundColor`: Background color of the app bar (default: #2196F3)
+- `showBackButton`: Whether to show a back button on the left side (true/false)
+- `centerTitle`: Whether to center the title text (true/false)
+- `actionIcons`: A pipe-separated list of icons to display on the right side (e.g., "🔍|⚙️|👤")
+
+#### BottomNavigationBar
+- `backgroundColor`: Background color of the navigation bar (default: #f8f9fa)
+- Can contain child items, each with:
+  - `active`: Whether the item is active/selected (true/false)
+  - `icon`: An icon to display above the label
+
+#### FloatingActionButton
+- `backgroundColor`: Background color of the button (default: #FF4081)
+
+#### Margin
+- `width`: Width of the margin in pixels
+- `height`: Height of the margin in pixels
+
+## Examples
 
 Basic example:
 
@@ -74,11 +111,18 @@ Screen: アカウント作成 (width: 393, height: 852)
 - Link: ログインはこちら { align: center }
 ```
 
+Example with text wrapping and custom font properties:
+
+```slml
+Screen: Text Example (width: 393, height: 852, backgroundColor: #f5f5f5)
+- Text: This is a long text that will automatically wrap to multiple lines based on the available width. { width: 300, fontSize: 16, color: #333333 }
+```
+
 Example with Flutter UI components, background colors, and padding:
 
 ```slml
 Screen: Flutter UI (width: 393, height: 852, backgroundColor: #f5f5f5)
-- Appbar: My Flutter App { backgroundColor: #2196F3 }
+- Appbar: My Flutter App { backgroundColor: #2196F3, centerTitle: true, showBackButton: true, actionIcons: 🔍|⚙️ }
 - Input: Search... { align: center, padding: 20, backgroundColor: #ffffff }
 - Button: Submit { align: center, backgroundColor: #4CAF50 }
 - FloatingActionButton: + { align: right }

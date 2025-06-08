@@ -184,7 +184,8 @@ This is rendered using the SLML plugin with the following features:
 
       try {
         // Process the markdown to find and render SLML blocks
-        const processedMarkdown = replaceSLMLWithSVG(markdown);
+        // Use a scale factor of 0.6 to make the preview smaller (300px width for a 500px screen)
+        const processedMarkdown = replaceSLMLWithSVG(markdown, 0.6);
 
         // Display the processed markdown
         preview.innerHTML = processedMarkdown;

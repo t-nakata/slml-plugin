@@ -21,9 +21,10 @@ const FONT_FAMILY = 'Arial, sans-serif';
  * Render a parsed SLML screen as SVG
  * 
  * @param screen - The parsed SLML screen object
+ * @param scale - Optional scale factor for the output SVG (default: 1)
  * @returns SVG string representation
  */
-export function renderSLMLToSVG(screen: any): string {
+export function renderSLMLToSVG(screen: any, scale: number = 1): string {
   const elements = screen.elements || [];
 
   // Separate special elements from regular elements
@@ -47,7 +48,11 @@ export function renderSLMLToSVG(screen: any): string {
   const svgHeight = screen.height || defaultHeight;
 
   // Start SVG
-  let svg = `<svg width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg">`;
+  // Apply scaling to width and height while keeping the viewBox the same
+  const scaledWidth = Math.round(svgWidth * scale);
+  const scaledHeight = Math.round(svgHeight * scale);
+
+  let svg = `<svg width="${scaledWidth}" height="${scaledHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg">`;
 
   // Add background
   const backgroundColor = screen.backgroundColor || "#f8f9fa";
@@ -198,7 +203,7 @@ function renderElement(element: any, x: number, y: number, screenWidth: number):
 
   switch (type.toLowerCase()) {
     case 'appbar':
-      return renderAppbar(label, alignedX, paddedY, screenWidth, backgroundColor);
+      return renderAppbar(label, alignedX, paddedY, screenWidth, backgroundColor, properties);
     case 'bottomnavigationbar':
       return renderBottomNavigationBar(label, alignedX, paddedY, screenWidth, backgroundColor, element);
     case 'floatingactionbutton':
@@ -441,25 +446,96 @@ function renderGenericElement(type: string, label: string, x: number, y: number,
 /**
  * Render an app bar
  */
-function renderAppbar(label: string, x: number, y: number, screenWidth: number, backgroundColor?: string): string {
+function renderAppbar(label: string, x: number, y: number, screenWidth: number, backgroundColor?: string, properties?: any): string {
   // App bar spans the full width of the screen
-  return `
+  let svg = `
     <rect 
       x="0" 
       y="${y}" 
       width="${screenWidth}" 
       height="${APPBAR_HEIGHT}" 
       fill="${backgroundColor || '#2196F3'}" 
+    />`;
+
+  // Check if back button should be shown
+  const showBackButton = properties?.showBackButton === true || properties?.showBackButton === 'true';
+
+  // Check if title should be centered
+  const centerTitle = properties?.centerTitle === true || properties?.centerTitle === 'true';
+
+  // Calculate positions for title
+  let titleX = SVG_PADDING;
+
+  // Adjust title position if back button is shown
+  if (showBackButton) {
+    titleX = SVG_PADDING + 40;
+  }
+
+  // Center the title if centerTitle is true
+  if (centerTitle) {
+    titleX = screenWidth / 2;
+  }
+
+  // Add back button if specified
+  if (showBackButton) {
+    svg += `
+    <!-- Back button -->
+    <circle 
+      cx="${SVG_PADDING + 15}" 
+      cy="${y + APPBAR_HEIGHT/2}" 
+      r="15" 
+      fill="rgba(255, 255, 255, 0.2)" 
     />
     <text 
-      x="${SVG_PADDING}" 
+      x="${SVG_PADDING + 15}" 
+      y="${y + APPBAR_HEIGHT/2 + 5}" 
+      font-family="${FONT_FAMILY}" 
+      font-size="18" 
+      text-anchor="middle"
+      fill="white" 
+    >←</text>`;
+  }
+
+  // Add title with appropriate text-anchor based on centerTitle
+  svg += `
+    <text 
+      x="${titleX}" 
       y="${y + APPBAR_HEIGHT/2 + 5}" 
       font-family="${FONT_FAMILY}" 
       font-size="16" 
       font-weight="bold"
-      fill="white" 
-    >${label}</text>
-  `;
+      fill="white"
+      text-anchor="${centerTitle ? 'middle' : 'start'}"
+    >${label}</text>`;
+
+  // Add action icons if specified
+  if (properties?.actionIcons) {
+    const icons = properties.actionIcons.split('|');
+    const iconSpacing = 40;
+    const startX = screenWidth - (icons.length * iconSpacing) + 10;
+
+    icons.forEach((icon: string, index: number) => {
+      const iconX = startX + (index * iconSpacing);
+      svg += `
+      <!-- Action icon ${index + 1} -->
+      <circle 
+        cx="${iconX}" 
+        cy="${y + APPBAR_HEIGHT/2}" 
+        r="15" 
+        fill="rgba(255, 255, 255, 0.2)" 
+      />
+      <text 
+        x="${iconX}" 
+        y="${y + APPBAR_HEIGHT/2 + 5}" 
+        font-family="${FONT_FAMILY}" 
+        font-size="14" 
+        text-anchor="middle"
+        fill="white" 
+      >${icon}</text>`;
+    });
+  }
+
+  return svg;
 }
 
 /**
@@ -670,23 +746,25 @@ function renderFloatingActionButton(label: string, x: number, y: number, backgro
  * Process Markdown content and render all SLML screens as SVG
  * 
  * @param markdownContent - The Markdown content
+ * @param scale - Optional scale factor for the output SVG (default: 1)
  * @returns Array of SVG strings
  */
-export function renderMarkdownSLML(markdownContent: string): string[] {
+export function renderMarkdownSLML(markdownContent: string, scale: number = 1): string[] {
   const screens = processMarkdown(markdownContent);
-  return screens.map(screen => renderSLMLToSVG(screen));
+  return screens.map(screen => renderSLMLToSVG(screen, scale));
 }
 
 /**
  * Replace SLML code blocks in Markdown with rendered SVG
  * 
  * @param markdownContent - The Markdown content
+ * @param scale - Optional scale factor for the output SVG (default: 1)
  * @returns Markdown with SLML blocks replaced by SVG
  */
-export function replaceSLMLWithSVG(markdownContent: string): string {
+export function replaceSLMLWithSVG(markdownContent: string, scale: number = 1): string {
   let result = markdownContent;
   const slmlBlocks = processMarkdown(markdownContent);
-  const svgBlocks = slmlBlocks.map(screen => renderSLMLToSVG(screen));
+  const svgBlocks = slmlBlocks.map(screen => renderSLMLToSVG(screen, scale));
 
   // Replace each SLML block with its SVG
   let blockIndex = 0;

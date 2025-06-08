@@ -175,7 +175,7 @@ Screen: Combined Font Properties (width: 500, height: 300, backgroundColor: #f5f
       testCases.forEach(testCase => {
         try {
           const parsedScreen = processMarkdown(testCase.slml)[0];
-          const svg = renderSLMLToSVG(parsedScreen);
+          const svg = renderSLMLToSVG(parsedScreen, 0.6);
           document.getElementById(testCase.id).innerHTML = svg;
         } catch (error) {
           console.error(`Error rendering test case ${testCase.id}:`, error);

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AppBar Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    .test-case {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .test-case h2 {
+      margin-top: 0;
+      color: #3498db;
+    }
+    .code {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+    .result {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      min-height: 200px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>AppBar Test Cases</h1>
+
+    <div class="test-case">
+      <h2>Test Case 1: Basic AppBar</h2>
+      <div class="code">```slml
+Screen: Basic AppBar (width: 500, height: 300, backgroundColor: #f5f5f5)
+- Appbar: My App { backgroundColor: #2196F3 }
+- Text: This is a basic AppBar with just a title.
+```</div>
+      <div class="result" id="result1"></div>
+    </div>
+
+    <div class="test-case">
+      <h2>Test Case 2: AppBar with Back Button</h2>
+      <div class="code">```slml
+Screen: AppBar with Back Button (width: 500, height: 300, backgroundColor: #f5f5f5)
+- Appbar: Details { backgroundColor: #2196F3, showBackButton: true }
+- Text: This AppBar has a back button on the left side.
+```</div>
+      <div class="result" id="result2"></div>
+    </div>
+
+    <div class="test-case">
+      <h2>Test Case 3: AppBar with Action Icons</h2>
+      <div class="code">```slml
+Screen: AppBar with Action Icons (width: 500, height: 300, backgroundColor: #f5f5f5)
+- Appbar: Home { backgroundColor: #2196F3, actionIcons: 🔍|⚙️|👤 }
+- Text: This AppBar has action icons on the right side.
+```</div>
+      <div class="result" id="result3"></div>
+    </div>
+
+    <div class="test-case">
+      <h2>Test Case 4: AppBar with Back Button and Action Icons</h2>
+      <div class="code">```slml
+Screen: Complete AppBar (width: 500, height: 300, backgroundColor: #f5f5f5)
+- Appbar: Settings { backgroundColor: #2196F3, showBackButton: true, actionIcons: ⚙️|❓ }
+- Text: This AppBar has both a back button and action icons.
+```</div>
+      <div class="result" id="result4"></div>
+    </div>
+
+    <div class="test-case">
+      <h2>Test Case 5: AppBar with Custom Background Color</h2>
+      <div class="code">```slml
+Screen: Custom AppBar (width: 500, height: 300, backgroundColor: #f5f5f5)
+- Appbar: Profile { backgroundColor: #FF5722, showBackButton: true, actionIcons: 📝|⭐ }
+- Text: This AppBar has a custom background color.
+```</div>
+      <div class="result" id="result5"></div>
+    </div>
+
+    <div class="test-case">
+      <h2>Test Case 6: AppBar with Centered Title</h2>
+      <div class="code">```slml
+Screen: Centered Title AppBar (width: 500, height: 300, backgroundColor: #f5f5f5)
+- Appbar: Centered Title { backgroundColor: #2196F3, centerTitle: true }
+- Text: This AppBar has its title centered.
+```</div>
+      <div class="result" id="result6"></div>
+    </div>
+
+    <div class="test-case">
+      <h2>Test Case 7: AppBar with Back Button and Centered Title</h2>
+      <div class="code">```slml
+Screen: Complete Centered AppBar (width: 500, height: 300, backgroundColor: #f5f5f5)
+- Appbar: Settings { backgroundColor: #2196F3, showBackButton: true, centerTitle: true, actionIcons: ⚙️|❓ }
+- Text: This AppBar has a back button, centered title, and action icons.
+```</div>
+      <div class="result" id="result7"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Import the renderer
+    import { replaceSLMLWithSVG } from '../renderer.js';
+
+    // Test cases
+    const testCases = [
+      {
+        id: 'result1',
+        slml: `Screen: Basic AppBar (width: 500, height: 300, backgroundColor: #f5f5f5)
+- Appbar: My App { backgroundColor: #2196F3 }
+- Text: This is a basic AppBar with just a title.`
+      },
+      {
+        id: 'result2',
+        slml: `Screen: AppBar with Back Button (width: 500, height: 300, backgroundColor: #f5f5f5)
+- Appbar: Details { backgroundColor: #2196F3, showBackButton: true }
+- Text: This AppBar has a back button on the left side.`
+      },
+      {
+        id: 'result3',
+        slml: `Screen: AppBar with Action Icons (width: 500, height: 300, backgroundColor: #f5f5f5)
+- Appbar: Home { backgroundColor: #2196F3, actionIcons: 🔍|⚙️|👤 }
+- Text: This AppBar has action icons on the right side.`
+      },
+      {
+        id: 'result4',
+        slml: `Screen: Complete AppBar (width: 500, height: 300, backgroundColor: #f5f5f5)
+- Appbar: Settings { backgroundColor: #2196F3, showBackButton: true, actionIcons: ⚙️|❓ }
+- Text: This AppBar has both a back button and action icons.`
+      },
+      {
+        id: 'result5',
+        slml: `Screen: Custom AppBar (width: 500, height: 300, backgroundColor: #f5f5f5)
+- Appbar: Profile { backgroundColor: #FF5722, showBackButton: true, actionIcons: 📝|⭐ }
+- Text: This AppBar has a custom background color.`
+      },
+      {
+        id: 'result6',
+        slml: `Screen: Centered Title AppBar (width: 500, height: 300, backgroundColor: #f5f5f5)
+- Appbar: Centered Title { backgroundColor: #2196F3, centerTitle: true }
+- Text: This AppBar has its title centered.`
+      },
+      {
+        id: 'result7',
+        slml: `Screen: Complete Centered AppBar (width: 500, height: 300, backgroundColor: #f5f5f5)
+- Appbar: Settings { backgroundColor: #2196F3, showBackButton: true, centerTitle: true, actionIcons: ⚙️|❓ }
+- Text: This AppBar has a back button, centered title, and action icons.`
+      }
+    ];
+
+    // Render each test case
+    window.addEventListener('DOMContentLoaded', () => {
+      testCases.forEach(testCase => {
+        const resultElement = document.getElementById(testCase.id);
+        if (resultElement) {
+          try {
+            const svg = replaceSLMLWithSVG(testCase.slml, 0.6);
+            resultElement.innerHTML = svg;
+          } catch (error) {
+            resultElement.innerHTML = `<div style="color: red;">Error: ${error.message}</div>`;
+            console.error(`Error rendering ${testCase.id}:`, error);
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
