@@ -242,17 +242,114 @@ This is rendered using the DCUI plugin with the following features:
 - BottomNavigationItem with icons: \`icon: 🏠, active: true|false\`
 `;
 
+    // Simple markdown to HTML converter
+    function markdownToHtml(markdown) {
+      if (!markdown) return '';
+
+      // Replace DCUI blocks first
+      let html = replaceDCUIWithSVG(markdown, 0.6);
+
+      // Process regular markdown syntax
+      // Headers
+      html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+      html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+      html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+      html = html.replace(/^#### (.*$)/gm, '<h4>$1</h4>');
+      html = html.replace(/^##### (.*$)/gm, '<h5>$1</h5>');
+      html = html.replace(/^###### (.*$)/gm, '<h6>$1</h6>');
+
+      // Bold
+      html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/__(.*?)__/g, '<strong>$1</strong>');
+
+      // Italic
+      html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+      html = html.replace(/_(.*?)_/g, '<em>$1</em>');
+
+      // Links
+      html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
+
+      // Images
+      html = html.replace(/!\[(.*?)\]\((.*?)\)/g, '<img alt="$1" src="$2">');
+
+      // Process lists
+      // First, mark unordered and ordered list items differently
+      html = html.replace(/^\s*[-*+]\s+(.*$)/gm, '<ul-li>$1</ul-li>');
+      html = html.replace(/^\s*\d+\.\s+(.*$)/gm, '<ol-li>$1</ol-li>');
+
+      // Then wrap consecutive unordered list items in ul tags
+      html = html.replace(/(<ul-li>.*?<\/ul-li>)(\s*<ul-li>.*?<\/ul-li>)*/g, '<ul>$&</ul>');
+
+      // Then wrap consecutive ordered list items in ol tags
+      html = html.replace(/(<ol-li>.*?<\/ol-li>)(\s*<ol-li>.*?<\/ol-li>)*/g, '<ol>$&</ol>');
+
+      // Finally, convert the temporary tags to proper li tags
+      html = html.replace(/<ul-li>(.*?)<\/ul-li>/g, '<li>$1</li>');
+      html = html.replace(/<ol-li>(.*?)<\/ol-li>/g, '<li>$1</li>');
+
+      // Code blocks (not DCUI)
+      // Match code blocks that don't start with 'dcui' (those are already processed)
+      html = html.replace(/```(?!dcui)([\s\S]*?)```/g, function(match, code) {
+        // Escape HTML in code blocks
+        const escapedCode = code
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+        return `<pre><code>${escapedCode}</code></pre>`;
+      });
+
+      // Inline code
+      html = html.replace(/`([^`]+)`/g, function(match, code) {
+        // Escape HTML in inline code
+        const escapedCode = code
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+        return `<code>${escapedCode}</code>`;
+      });
+
+      // Blockquotes
+      html = html.replace(/^>\s+(.*$)/gm, '<blockquote>$1</blockquote>');
+
+      // Paragraphs (lines that are not part of other elements)
+      // Split by double newlines to identify paragraphs
+      const paragraphs = html.split(/\n\n+/);
+      html = paragraphs.map(p => {
+        // Skip if already wrapped in HTML tags
+        if (p.trim().startsWith('<') && 
+            !p.trim().startsWith('<li>') && 
+            !p.trim().startsWith('<ul-li>') && 
+            !p.trim().startsWith('<ol-li>')) {
+          return p;
+        }
+        // Skip empty lines
+        if (!p.trim()) {
+          return '';
+        }
+        // Wrap in paragraph tags if it's not a list item
+        if (!p.includes('<li>') && 
+            !p.includes('<ul-li>') && 
+            !p.includes('<ol-li>') && 
+            !p.includes('<ul>') && 
+            !p.includes('<ol>')) {
+          return `<p>${p}</p>`;
+        }
+        return p;
+      }).join('\n\n');
+
+      return html;
+    }
+
     // Render the markdown with DCUI
     function renderMarkdown() {
       const markdown = markdownInput.value;
 
       try {
-        // Process the markdown to find and render DCUI blocks
-        // Use a scale factor of 0.6 to make the preview smaller (300px width for a 500px screen)
-        const processedMarkdown = replaceDCUIWithSVG(markdown, 0.6);
+        // Convert markdown to HTML
+        const html = markdownToHtml(markdown);
 
-        // Display the processed markdown
-        preview.innerHTML = processedMarkdown;
+        // Display the processed markdown as HTML
+        preview.innerHTML = html;
       } catch (error) {
         console.error('Error rendering markdown:', error);
         preview.innerHTML = `<div style="color: red;">Error: ${error.message}</div>`;

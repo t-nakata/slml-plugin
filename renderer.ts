@@ -566,7 +566,7 @@ function replaceDCUIWithSVG(markdown: string, scale = 1.0): string {
   while ((match = dcuiBlockRegex.exec(markdown)) !== null) {
     if (index < screens.length) {
       const svg = renderDCUIToSVG(screens[index], scale);
-      processedMarkdown = processedMarkdown.replace(match[0], svg);
+      processedMarkdown = processedMarkdown.replace(match[0], `\n\n${svg}\n\n`);
       index++;
     }
   }
