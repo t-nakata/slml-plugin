@@ -271,7 +271,6 @@ function renderCheckbox(element, screenWidth, yOffset, scale) {
     const checkboxSize = 20;
     const labelWidth = label.length * (DEFAULT_FONT_SIZE * 0.6); // Estimate label width
     const totalWidth = checkboxSize + 10 + labelWidth; // Checkbox + spacing + label
-
     // Calculate x position based on alignment
     let checkboxX;
     if (align === 'left') {
@@ -284,9 +283,7 @@ function renderCheckbox(element, screenWidth, yOffset, scale) {
         // center - position the checkbox so that checkbox + label are centered
         checkboxX = (screenWidth - totalWidth) / 2;
     }
-
     const checkboxY = yOffset + (ELEMENT_HEIGHT - checkboxSize) / 2;
-
     let svg = `
     <rect x="${checkboxX}" y="${checkboxY}" width="${checkboxSize}" height="${checkboxSize}" fill="white" stroke="#ced4da" rx="2" />
   `;
@@ -433,6 +430,20 @@ function renderBottomNavigationBar(element, screenWidth, yOffset, scale, screenH
                 // Use the createIconSVG function to create an SVG for the icon
                 svg += createIconSVG(icon, itemX + itemWidth / 2, bottomPosition + height / 2 - 10, 24, color);
                 svg += `
+          <text x="${itemX + itemWidth / 2}" y="${bottomPosition + height / 2 + 15}" font-family="${FONT_FAMILY}" font-size="12" fill="${color}" text-anchor="middle" dominant-baseline="middle">${item.label}</text>
+        `;
+            }
+            // Check if this is an image URL
+            else if (typeof icon === 'string' && (icon.startsWith('http') ||
+                icon.endsWith('.jpg') ||
+                icon.endsWith('.jpeg') ||
+                icon.endsWith('.png') ||
+                icon.endsWith('.svg') ||
+                icon.endsWith('.gif'))) {
+                // Render as an image
+                const iconSize = 24;
+                svg += `
+          <image href="${icon}" x="${itemX + itemWidth / 2 - iconSize / 2}" y="${bottomPosition + height / 2 - 15 - iconSize / 2}" width="${iconSize}" height="${iconSize}" />
           <text x="${itemX + itemWidth / 2}" y="${bottomPosition + height / 2 + 15}" font-family="${FONT_FAMILY}" font-size="12" fill="${color}" text-anchor="middle" dominant-baseline="middle">${item.label}</text>
         `;
             }

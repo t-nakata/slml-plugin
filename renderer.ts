@@ -5,8 +5,8 @@
  * as SVG diagrams.
  */
 
-import { parseSLML, processMarkdown, SLMLScreen, SLMLElement } from './parser';
-import { createIconSVG } from './icons';
+import { parseSLML, processMarkdown, SLMLScreen, SLMLElement } from './parser.js';
+import { createIconSVG } from './icons.js';
 
 // Constants for rendering
 const ELEMENT_HEIGHT = 40;
