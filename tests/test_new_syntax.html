@@ -56,7 +56,7 @@
 
     <div class="test-case">
       <h2>Test Case 1: User Profile Example</h2>
-      <div class="code">```slml
+      <div class="code">```dcui
 # ユーザープロフィール画面
 screen:
   title: "プロフィール"
@@ -89,7 +89,7 @@ button:
 
     <div class="test-case">
       <h2>Test Case 2: Simple Form Example</h2>
-      <div class="code">```slml
+      <div class="code">```dcui
 # ログインフォーム
 screen:
   title: "ログイン"
@@ -133,7 +133,7 @@ button:
 
   <script type="module">
     // Import the parser and renderer
-    import { replaceSLMLWithSVG } from '../renderer.js';
+    import { replaceDCUIWithSVG } from '../renderer.js';
 
     // Test cases
     const testCases = [
@@ -213,7 +213,7 @@ button:
         const resultElement = document.getElementById(testCase.id);
         if (resultElement) {
           try {
-            const svg = replaceSLMLWithSVG(testCase.slml, 0.6);
+            const svg = replaceDCUIWithSVG(testCase.slml, 0.6);
             resultElement.innerHTML = svg;
           } catch (error) {
             resultElement.innerHTML = `<div style="color: red;">Error: ${error.message}</div>`;

@@ -119,7 +119,7 @@ bottomNavigationBar:
   <script type="module">
     // Import the parser and renderer
     import { parseDCUI, processMarkdown } from '../parser.js';
-    import { renderSLMLToSVG } from '../renderer.js';
+    import { renderDCUIToSVG } from '../renderer.js';
 
     // Test case
     const testCase = {
@@ -163,7 +163,7 @@ bottomNavigationBar:
         document.getElementById('parsed-data1').textContent = JSON.stringify(parsedScreen, null, 2);
 
         // Render the SVG
-        const svg = renderSLMLToSVG(parsedScreen, 0.6);
+        const svg = renderDCUIToSVG(parsedScreen, 0.6);
         document.getElementById(testCase.id).innerHTML = svg;
 
         console.log('Parsed Screen:', parsedScreen);

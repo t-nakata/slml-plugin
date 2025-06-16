@@ -68,10 +68,13 @@ export function createIconSVG(iconName: string, x: number, y: number, size = 24,
   const iconPath = getIconPath(iconName);
 
   if (iconPath) {
+    // Use a g element to group the SVG elements and apply the transform
     return `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}" x="${x - size/2}" y="${y - size/2}" fill="${color}">
-        <path d="${iconPath}"></path>
-      </svg>
+      <g transform="translate(${x - size/2}, ${y - size/2})">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}" fill="${color}">
+          <path d="${iconPath}"></path>
+        </svg>
+      </g>
     `;
   } else {
     // Return a placeholder if the icon is not found

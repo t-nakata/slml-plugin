@@ -66,7 +66,7 @@
 
     <div class="test-case">
       <h2>Test Case 1: Image with URL as Property</h2>
-      <div class="code">```slml
+      <div class="code">```dcui
 # Image Test
 screen:
   title: "Image Test"
@@ -86,7 +86,7 @@ image:
 
     <div class="test-case">
       <h2>Test Case 2: Image with URL as Label</h2>
-      <div class="code">```slml
+      <div class="code">```dcui
 # Image Test
 screen:
   title: "Image Test"
@@ -107,7 +107,7 @@ image: https://example.com/image.jpg
   <script type="module">
     // Import the parser and renderer
     import { parseDCUI, processMarkdown } from '../parser.js';
-    import { renderSLMLToSVG } from '../renderer.js';
+    import { renderDCUIToSVG } from '../renderer.js';
 
     // Test cases
     const testCases = [
@@ -153,7 +153,7 @@ image: https://example.com/image.jpg
           document.getElementById(testCase.dataId).textContent = JSON.stringify(parsedScreen, null, 2);
 
           // Render the SVG
-          const svg = renderSLMLToSVG(parsedScreen, 0.6);
+          const svg = renderDCUIToSVG(parsedScreen, 0.6);
           document.getElementById(testCase.id).innerHTML = svg;
 
           console.log(`Parsed Screen for ${testCase.id}:`, parsedScreen);

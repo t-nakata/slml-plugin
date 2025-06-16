@@ -64,10 +64,13 @@ export function getIconPath(iconName) {
 export function createIconSVG(iconName, x, y, size = 24, color = 'currentColor') {
     const iconPath = getIconPath(iconName);
     if (iconPath) {
+        // Use a g element to group the SVG elements and apply the transform
         return `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}" x="${x - size / 2}" y="${y - size / 2}" fill="${color}">
-        <path d="${iconPath}"></path>
-      </svg>
+      <g transform="translate(${x - size / 2}, ${y - size / 2})">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}" fill="${color}">
+          <path d="${iconPath}"></path>
+        </svg>
+      </g>
     `;
     }
     else {

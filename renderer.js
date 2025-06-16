@@ -26,7 +26,7 @@ const DEFAULT_FAB_BG_COLOR = '#FF4081';
  * @param scale - Optional scale factor for the SVG (default: 1.0)
  * @returns SVG markup as a string
  */
-function renderSLMLToSVG(screen, scale = 1.0) {
+function renderDCUIToSVG(screen, scale = 1.0) {
     const width = screen.width;
     const height = screen.height;
     const scaledWidth = width * scale;
@@ -477,22 +477,22 @@ function renderMargin(element, screenWidth, yOffset, _scale) {
     };
 }
 /**
- * Replaces SLML code blocks in Markdown content with SVG diagrams
+ * Replaces DCUI code blocks in Markdown content with SVG diagrams
  * @param markdown - The Markdown content
  * @param scale - Optional scale factor for the SVG (default: 1.0)
- * @returns Processed Markdown with SLML blocks replaced by SVG
+ * @returns Processed Markdown with DCUI blocks replaced by SVG
  */
-function replaceSLMLWithSVG(markdown, scale = 1.0) {
-    // First, process the markdown to get all SLML screens
+function replaceDCUIWithSVG(markdown, scale = 1.0) {
+    // First, process the markdown to get all DCUI screens
     const screens = processMarkdown(markdown);
-    // Then, replace each SLML code block with its SVG
+    // Then, replace each DCUI code block with its SVG
     let processedMarkdown = markdown;
-    const slmlBlockRegex = /```slml\n([\s\S]*?)```/g;
+    const dcuiBlockRegex = /```dcui\n([\s\S]*?)```/g;
     let match;
     let index = 0;
-    while ((match = slmlBlockRegex.exec(markdown)) !== null) {
+    while ((match = dcuiBlockRegex.exec(markdown)) !== null) {
         if (index < screens.length) {
-            const svg = renderSLMLToSVG(screens[index], scale);
+            const svg = renderDCUIToSVG(screens[index], scale);
             processedMarkdown = processedMarkdown.replace(match[0], svg);
             index++;
         }
@@ -500,4 +500,4 @@ function replaceSLMLWithSVG(markdown, scale = 1.0) {
     return processedMarkdown;
 }
 // Export functions for use in other modules
-export { renderSLMLToSVG, replaceSLMLWithSVG };
+export { renderDCUIToSVG, replaceDCUIWithSVG };

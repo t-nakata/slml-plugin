@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SLML Renderer Demo</title>
+  <title>DesignCodeUI Renderer Demo</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -83,11 +83,11 @@
 </head>
 <body>
   <div class="container">
-    <h1>SLML Renderer Demo</h1>
+    <h1>DesignCodeUI Renderer Demo</h1>
 
     <div class="editor-container">
       <div class="editor">
-        <textarea id="markdown-input" placeholder="Enter Markdown with SLML code blocks here..."></textarea>
+        <textarea id="markdown-input" placeholder="Enter Markdown with DCUI code blocks here..."></textarea>
       </div>
       <div class="preview" id="preview">
         <!-- Rendered output will appear here -->
@@ -102,8 +102,8 @@
     </div>
 
     <div class="example-container">
-      <h2>Example SLML Code</h2>
-      <div class="example">```slml
+      <h2>Example DesignCodeUI Code</h2>
+      <div class="example">```dcui
 # Flutter UI
 screen:
   title: "Flutter UI"
@@ -168,7 +168,7 @@ bottomNavigationBar:
   <script type="module">
     // Import the parser and renderer
     import { processMarkdown } from './parser.js';
-    import { renderSLMLToSVG, replaceSLMLWithSVG } from './renderer.js';
+    import { renderDCUIToSVG, replaceDCUIWithSVG } from './renderer.js';
 
     // DOM elements
     const markdownInput = document.getElementById('markdown-input');
@@ -178,12 +178,12 @@ bottomNavigationBar:
     const clearBtn = document.getElementById('clear-btn');
     const downloadSvgBtn = document.getElementById('download-svg-btn');
 
-    // Example SLML code
+    // Example DCUI code
     const exampleMarkdown = `# Flutter UI Components
 
 Below is a Flutter UI screen with custom styling:
 
-\`\`\`slml
+\`\`\`dcui
 # Flutter UI
 screen:
   title: "Flutter UI"
@@ -229,7 +229,7 @@ bottomNavigationBar:
         icon: mdiSettings
 \`\`\`
 
-This is rendered using the SLML plugin with the following features:
+This is rendered using the DCUI plugin with the following features:
 - Screen size specification: \`size: 393, 852\`
 - Screen background color: \`backgroundColor: #f5f5f5\`
 - Element alignment: \`align: left|center|right\`
@@ -242,14 +242,14 @@ This is rendered using the SLML plugin with the following features:
 - BottomNavigationItem with icons: \`icon: 🏠, active: true|false\`
 `;
 
-    // Render the markdown with SLML
+    // Render the markdown with DCUI
     function renderMarkdown() {
       const markdown = markdownInput.value;
 
       try {
-        // Process the markdown to find and render SLML blocks
+        // Process the markdown to find and render DCUI blocks
         // Use a scale factor of 0.6 to make the preview smaller (300px width for a 500px screen)
-        const processedMarkdown = replaceSLMLWithSVG(markdown, 0.6);
+        const processedMarkdown = replaceDCUIWithSVG(markdown, 0.6);
 
         // Display the processed markdown
         preview.innerHTML = processedMarkdown;
@@ -277,7 +277,7 @@ This is rendered using the SLML plugin with the following features:
       const svgElement = preview.querySelector('svg');
 
       if (!svgElement) {
-        alert('No SVG found. Please render an SLML diagram first.');
+        alert('No SVG found. Please render an DCUI diagram first.');
         return;
       }
 
@@ -290,7 +290,7 @@ This is rendered using the SLML plugin with the following features:
       // Create a temporary download link
       const downloadLink = document.createElement('a');
       downloadLink.href = URL.createObjectURL(blob);
-      downloadLink.download = 'slml_diagram.svg';
+      downloadLink.download = 'dcui_diagram.svg';
 
       // Append the link to the document, click it, and remove it
       document.body.appendChild(downloadLink);
@@ -308,7 +308,7 @@ This is rendered using the SLML plugin with the following features:
 
       // Test BottomNavigationItem parsing
       console.log("Testing BottomNavigationItem parsing...");
-      const testSLML = `# Test Screen
+      const testDCUI = `# Test Screen
 screen:
   title: "Test Screen"
 
@@ -330,7 +330,7 @@ bottomNavigationBar:
         label: "Settings"
         icon: ⚙️`;
 
-      const parsedScreen = processMarkdown(testSLML)[0];
+      const parsedScreen = processMarkdown(testDCUI)[0];
       console.log('Parsed Screen:', parsedScreen);
 
       // Check if BottomNavigationBar has children

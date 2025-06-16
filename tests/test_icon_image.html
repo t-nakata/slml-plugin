@@ -66,7 +66,7 @@
 
     <div class="test-case">
       <h2>Test Case: Material Design Icons</h2>
-      <div class="code">```slml
+      <div class="code">```dcui
 # Material Design Icons Test
 screen:
   title: "Material Design Icons Test"
@@ -94,7 +94,7 @@ bottomNavigationBar:
 
     <div class="test-case">
       <h2>Test Case: Image Icons</h2>
-      <div class="code">```slml
+      <div class="code">```dcui
 # Image Icons Test
 screen:
   title: "Image Icons Test"
@@ -124,7 +124,7 @@ bottomNavigationBar:
   <script type="module">
     // Import the parser and renderer
     import { parseDCUI, processMarkdown } from '../parser.js';
-    import { renderSLMLToSVG } from '../renderer.js';
+    import { renderDCUIToSVG } from '../renderer.js';
 
     // Test cases
     const testCases = [
@@ -187,7 +187,7 @@ bottomNavigationBar:
           document.getElementById(testCase.parsedDataId).textContent = JSON.stringify(parsedScreen, null, 2);
 
           // Render the SVG
-          const svg = renderSLMLToSVG(parsedScreen, 0.6);
+          const svg = renderDCUIToSVG(parsedScreen, 0.6);
           document.getElementById(testCase.id).innerHTML = svg;
 
           console.log(`Parsed Screen for ${testCase.id}:`, parsedScreen);
