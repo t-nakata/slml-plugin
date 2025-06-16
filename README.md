@@ -7,12 +7,14 @@ SLML (Screen Layout Markup Language) is a simple markup language for describing 
 - Parse SLML code blocks in Markdown
 - Convert SLML to structured JSON data
 - Render SLML as SVG diagrams
+- Download rendered SVG diagrams as files
 - Custom screen size specification
 - Element alignment control (left, center, right)
 - Background color customization for screens and elements
 - Padding control between elements
 - Text wrapping with custom width and font size
 - Image sizing and alignment
+- Material Design Icons integration via CDN
 - Material Design 3テーマサポート
 - レスポンシブレイアウト対応
 - インタラクション・アニメーション定義
@@ -82,6 +84,29 @@ Where:
 - `center`: 要素は水平方向に中央揃えされます（デフォルト）
 - `right`: 要素は左端からx = (screenWidth - elementWidth - 16)の位置に配置されます
 
+### Material Design Icons
+
+SLML supports Material Design Icons from the @mdi/svg library via CDN. You can use these icons in various elements, such as the AppBar's action icons.
+
+Currently supported icons:
+- `mdiAccountCircle` - Account circle icon
+- `mdiCheckDecagram` - Check decagram icon
+- `mdiEmail` - Email icon
+- `mdiMenu` - Menu (hamburger) icon
+- `mdiDotsVertical` - Vertical dots (more) icon
+- `mdiMagnify` - Magnify (search) icon
+- `mdiCog` - Cog (settings) icon
+- `mdiAccount` - Account icon
+- `mdiHelpCircle` - Help circle icon
+- `mdiPencil` - Pencil (edit) icon
+- `mdiStar` - Star icon
+
+To use these icons, simply reference them by name in the appropriate property. For example:
+
+```slml
+- Appbar: Home { backgroundColor: #2196F3, actionIcons: mdiMagnify|mdiCog|mdiAccountCircle }
+```
+
 ### Element-Specific Properties
 
 #### Text
@@ -97,7 +122,9 @@ Where:
 - `backgroundColor`: Background color of the app bar (default: #2196F3)
 - `showBackButton`: Whether to show a back button on the left side (true/false)
 - `centerTitle`: Whether to center the title text (true/false)
-- `actionIcons`: A pipe-separated list of icons to display on the right side (e.g., "🔍|⚙️|👤")
+- `actionIcons`: A pipe-separated list of icons to display on the right side. Can be:
+  - Emoji or text characters (e.g., "🔍|⚙️|👤")
+  - Material Design Icons references (e.g., "mdiMagnify|mdiCog|mdiAccountCircle")
 
 #### BottomNavigationBar
 - `backgroundColor`: Background color of the navigation bar (default: #f8f9fa)
@@ -388,7 +415,14 @@ For JetBrains IDE integration, you can create a plugin that:
 
 ## Demo
 
-A demo HTML page is included in the plugin. Open `index.html` in your browser to see the plugin in action.
+A demo HTML page is included in the plugin. Open `index.html` in your browser to see the plugin in action. The demo includes:
+
+- A text editor for entering Markdown with SLML code blocks
+- A preview pane that renders the SLML as SVG
+- Buttons to render, load examples, clear the editor, and download the SVG
+- Example SLML code to get you started
+
+You can download the rendered SVG diagram by clicking the "Download SVG" button after rendering your SLML code.
 
 ## Development
 

@@ -5,6 +5,7 @@
  * as SVG diagrams.
  */
 import { processMarkdown } from './parser.js';
+import { createIconSVG } from './icons.js';
 // Constants for rendering
 const ELEMENT_HEIGHT = 40;
 const ELEMENT_PADDING = 10;
@@ -97,7 +98,7 @@ function renderAppBar(element, screenWidth, yOffset, scale) {
     let svg = `<rect x="0" y="${yOffset}" width="${screenWidth}" height="${height}" fill="${backgroundColor}" />`;
     // Back button
     if (showBackButton) {
-        svg += `<text x="16" y="${yOffset + height / 2}" font-family="${FONT_FAMILY}" font-size="24" fill="white" dominant-baseline="middle">←</text>`;
+        svg += createIconSVG('mdiArrowLeft', 24, yOffset + height / 2, 24, 'white');
     }
     // Title
     const titleX = centerTitle ? screenWidth / 2 : (showBackButton ? 56 : 16);
@@ -107,7 +108,16 @@ function renderAppBar(element, screenWidth, yOffset, scale) {
     if (actionIcons.length > 0) {
         for (let i = 0; i < actionIcons.length; i++) {
             const iconX = screenWidth - 16 - (actionIcons.length - i - 1) * 40;
-            svg += `<text x="${iconX}" y="${yOffset + height / 2}" font-family="${FONT_FAMILY}" font-size="24" fill="white" text-anchor="middle" dominant-baseline="middle">${actionIcons[i]}</text>`;
+            const icon = actionIcons[i].trim();
+            // Check if this is a Material Design Icon reference (starts with "mdi")
+            if (icon.startsWith('mdi')) {
+                // Use the createIconSVG function to create an SVG for the icon
+                svg += createIconSVG(icon, iconX, yOffset + height / 2, 24, 'white');
+            }
+            else {
+                // Regular text/emoji icon
+                svg += `<text x="${iconX}" y="${yOffset + height / 2}" font-family="${FONT_FAMILY}" font-size="24" fill="white" text-anchor="middle" dominant-baseline="middle">${icon}</text>`;
+            }
         }
     }
     return {
@@ -259,8 +269,24 @@ function renderCheckbox(element, screenWidth, yOffset, scale) {
     // Apply padding to yOffset
     yOffset += padding;
     const checkboxSize = 20;
-    const checkboxX = x;
+    const labelWidth = label.length * (DEFAULT_FONT_SIZE * 0.6); // Estimate label width
+    const totalWidth = checkboxSize + 10 + labelWidth; // Checkbox + spacing + label
+
+    // Calculate x position based on alignment
+    let checkboxX;
+    if (align === 'left') {
+        checkboxX = x;
+    }
+    else if (align === 'right') {
+        checkboxX = screenWidth - ELEMENT_MARGIN - labelWidth - 10 - checkboxSize;
+    }
+    else {
+        // center - position the checkbox so that checkbox + label are centered
+        checkboxX = (screenWidth - totalWidth) / 2;
+    }
+
     const checkboxY = yOffset + (ELEMENT_HEIGHT - checkboxSize) / 2;
+
     let svg = `
     <rect x="${checkboxX}" y="${checkboxY}" width="${checkboxSize}" height="${checkboxSize}" fill="white" stroke="#ced4da" rx="2" />
   `;
@@ -402,10 +428,21 @@ function renderBottomNavigationBar(element, screenWidth, yOffset, scale, screenH
             const icon = item.icon || '';
             const active = item.active || false;
             const color = active ? '#007bff' : '#6c757d';
-            svg += `
-        <text x="${itemX + itemWidth / 2}" y="${bottomPosition + height / 2 - 10}" font-family="${FONT_FAMILY}" font-size="20" fill="${color}" text-anchor="middle" dominant-baseline="middle">${icon}</text>
-        <text x="${itemX + itemWidth / 2}" y="${bottomPosition + height / 2 + 15}" font-family="${FONT_FAMILY}" font-size="12" fill="${color}" text-anchor="middle" dominant-baseline="middle">${item.label}</text>
-      `;
+            // Check if this is a Material Design Icon reference (starts with "mdi")
+            if (icon.startsWith('mdi')) {
+                // Use the createIconSVG function to create an SVG for the icon
+                svg += createIconSVG(icon, itemX + itemWidth / 2, bottomPosition + height / 2 - 10, 24, color);
+                svg += `
+          <text x="${itemX + itemWidth / 2}" y="${bottomPosition + height / 2 + 15}" font-family="${FONT_FAMILY}" font-size="12" fill="${color}" text-anchor="middle" dominant-baseline="middle">${item.label}</text>
+        `;
+            }
+            else {
+                // Regular text/emoji icon
+                svg += `
+          <text x="${itemX + itemWidth / 2}" y="${bottomPosition + height / 2 - 10}" font-family="${FONT_FAMILY}" font-size="20" fill="${color}" text-anchor="middle" dominant-baseline="middle">${icon}</text>
+          <text x="${itemX + itemWidth / 2}" y="${bottomPosition + height / 2 + 15}" font-family="${FONT_FAMILY}" font-size="12" fill="${color}" text-anchor="middle" dominant-baseline="middle">${item.label}</text>
+        `;
+            }
         }
     }
     return {

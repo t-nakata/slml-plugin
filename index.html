@@ -98,6 +98,7 @@
       <button id="render-btn">Render</button>
       <button id="load-example-btn">Load Example</button>
       <button id="clear-btn">Clear</button>
+      <button id="download-svg-btn">Download SVG</button>
     </div>
 
     <div class="example-container">
@@ -135,7 +136,7 @@ bottomNavigationBar:
   children:
     - bottomNavigationItem:
         label: "Home"
-        icon: 🏠
+        icon: mdiHome
         active: true
     - bottomNavigationItem:
         label: "Search"
@@ -145,7 +146,7 @@ bottomNavigationBar:
         icon: 👤
     - bottomNavigationItem:
         label: "Settings"
-        icon: ⚙️
+        icon: mdiSettings
 ```</div>
       <p>Copy this example into the editor and click "Render" to see the SVG output.</p>
       <p>Features:</p>
@@ -175,6 +176,7 @@ bottomNavigationBar:
     const renderBtn = document.getElementById('render-btn');
     const loadExampleBtn = document.getElementById('load-example-btn');
     const clearBtn = document.getElementById('clear-btn');
+    const downloadSvgBtn = document.getElementById('download-svg-btn');
 
     // Example SLML code
     const exampleMarkdown = `# Flutter UI Components
@@ -214,7 +216,7 @@ bottomNavigationBar:
   children:
     - bottomNavigationItem:
         label: "Home"
-        icon: 🏠
+        icon: mdiHome
         active: true
     - bottomNavigationItem:
         label: "Search"
@@ -224,7 +226,7 @@ bottomNavigationBar:
         icon: 👤
     - bottomNavigationItem:
         label: "Settings"
-        icon: ⚙️
+        icon: mdiettings
 \`\`\`
 
 This is rendered using the SLML plugin with the following features:
@@ -268,6 +270,36 @@ This is rendered using the SLML plugin with the following features:
       markdownInput.value = '';
       preview.innerHTML = '';
     });
+
+    // Function to download SVG
+    function downloadSVG() {
+      // Find the SVG element in the preview
+      const svgElement = preview.querySelector('svg');
+
+      if (!svgElement) {
+        alert('No SVG found. Please render an SLML diagram first.');
+        return;
+      }
+
+      // Get the SVG content as a string
+      const svgContent = svgElement.outerHTML;
+
+      // Create a Blob with the SVG content
+      const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+
+      // Create a temporary download link
+      const downloadLink = document.createElement('a');
+      downloadLink.href = URL.createObjectURL(blob);
+      downloadLink.download = 'slml_diagram.svg';
+
+      // Append the link to the document, click it, and remove it
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    }
+
+    // Add event listener for the download button
+    downloadSvgBtn.addEventListener('click', downloadSVG);
 
     // Load example on page load
     window.addEventListener('DOMContentLoaded', () => {
