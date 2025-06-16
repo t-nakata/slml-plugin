@@ -104,63 +104,65 @@
     <div class="example-container">
       <h2>Example DesignCodeUI Code</h2>
       <div class="example">```dcui
-# Flutter UI
+# Login Screen
 screen:
-  title: "Flutter UI"
+  title: "Login Screen"
   size: 393, 852
   backgroundColor: #f5f5f5
 appbar:
-  title: "My Flutter App"
+  title: "Login"
   backgroundColor: #2196F3
+margin:
+  height: 50
+image:
+  url: "https://example.com/logo.png"
+  align: center
+  width: 150
+  height: 150
+margin:
+  height: 30
 input:
-  label: "Search..."
+  label: "Username"
   align: center
   padding: 20
   backgroundColor: #ffffff
 margin:
-  width: 300
-  height: 30
-image:
-  url: "https://example.com/image.jpg"
+  height: 20
+input:
+  label: "Password"
   align: center
-  width: 200
-  height: 150
+  padding: 20
+  backgroundColor: #ffffff
+  isPassword: true
+margin:
+  height: 30
 button:
-  label: "Submit"
+  label: "Login"
   align: center
   backgroundColor: #4CAF50
-floatingActionButton:
-  label: "+"
-bottomNavigationBar:
-  backgroundColor: #ffffff
-  children:
-    - bottomNavigationItem:
-        label: "Home"
-        icon: mdiHome
-        active: true
-    - bottomNavigationItem:
-        label: "Search"
-        icon: 🔍
-    - bottomNavigationItem:
-        label: "Profile"
-        icon: 👤
-    - bottomNavigationItem:
-        label: "Settings"
-        icon: mdiSettings
+  width: 200
+margin:
+  height: 20
+button:
+  label: "Forgot Password?"
+  align: center
+  backgroundColor: transparent
+  textColor: #2196F3
 ```</div>
       <p>Copy this example into the editor and click "Render" to see the SVG output.</p>
       <p>Features:</p>
       <ul>
         <li>Screen size specification: <code>size: 393, 852</code></li>
         <li>Screen background color: <code>backgroundColor: #f5f5f5</code></li>
-        <li>Element alignment: <code>align: left|center|right</code></li>
+        <li>Element alignment: <code>align: center</code></li>
         <li>Element padding: <code>padding: 20</code></li>
         <li>Element background color: <code>backgroundColor: #ffffff</code></li>
-        <li>Flutter UI components: appbar, bottomNavigationBar, floatingActionButton</li>
-        <li>Margin element: <code>margin: width: 300, height: 30</code> for adding customizable space</li>
-        <li>Image element: <code>image: url: "url"</code> for displaying images</li>
-        <li>BottomNavigationBar with items using children property and indentation</li>
-        <li>BottomNavigationItem with icons: <code>icon: 🏠, active: true|false</code></li>
+        <li>UI components: appbar, input, button</li>
+        <li>Margin element: <code>margin: height: 30</code> for adding vertical space</li>
+        <li>Image element: <code>image: url: "url"</code> for displaying a logo</li>
+        <li>Password field: <code>isPassword: true</code> for secure input</li>
+        <li>Text styling: <code>textColor: #2196F3</code> for colored text</li>
+        <li>Transparent background: <code>backgroundColor: transparent</code> for borderless buttons</li>
       </ul>
     </div>
   </div>
@@ -179,67 +181,69 @@ bottomNavigationBar:
     const downloadSvgBtn = document.getElementById('download-svg-btn');
 
     // Example DCUI code
-    const exampleMarkdown = `# Flutter UI Components
+    const exampleMarkdown = `# Login Screen Example
 
-Below is a Flutter UI screen with custom styling:
+Below is a simple login screen with custom styling:
 
 \`\`\`dcui
-# Flutter UI
+# Login Screen
 screen:
-  title: "Flutter UI"
+  title: "Login Screen"
   size: 393, 852
   backgroundColor: #f5f5f5
 appbar:
-  title: "My Flutter App"
+  title: "Login"
   backgroundColor: #2196F3
+margin:
+  height: 50
+image:
+  url: "https://example.com/logo.png"
+  align: center
+  width: 150
+  height: 150
+margin:
+  height: 30
 input:
-  label: "Search..."
+  label: "Username"
   align: center
   padding: 20
   backgroundColor: #ffffff
 margin:
-  width: 300
-  height: 30
-image:
-  url: "https://example.com/image.jpg"
+  height: 20
+input:
+  label: "Password"
   align: center
-  width: 200
-  height: 150
+  padding: 20
+  backgroundColor: #ffffff
+  isPassword: true
+margin:
+  height: 30
 button:
-  label: "Submit"
+  label: "Login"
   align: center
   backgroundColor: #4CAF50
-floatingActionButton:
-  label: "+"
-bottomNavigationBar:
-  backgroundColor: #ffffff
-  children:
-    - bottomNavigationItem:
-        label: "Home"
-        icon: mdiHome
-        active: true
-    - bottomNavigationItem:
-        label: "Search"
-        icon: 🔍
-    - bottomNavigationItem:
-        label: "Profile"
-        icon: 👤
-    - bottomNavigationItem:
-        label: "Settings"
-        icon: mdiSettings
+  width: 200
+margin:
+  height: 20
+button:
+  label: "Forgot Password?"
+  align: center
+  backgroundColor: transparent
+  textColor: #2196F3
 \`\`\`
 
 This is rendered using the DCUI plugin with the following features:
 - Screen size specification: \`size: 393, 852\`
 - Screen background color: \`backgroundColor: #f5f5f5\`
-- Element alignment: \`align: left|center|right\`
+- Element alignment: \`align: center\`
 - Element padding: \`padding: 20\`
-- Element background color: \`backgroundColor: #color\`
-- Flutter UI components: appbar, bottomNavigationBar, floatingActionButton
-- Margin element: \`margin: width: 300, height: 30\` for adding customizable space
-- Image element: \`image: url: "url"\` for displaying images
-- BottomNavigationBar with items using children property and indentation
-- BottomNavigationItem with icons: \`icon: 🏠, active: true|false\`
+- Element background color: \`backgroundColor: #ffffff\`
+- UI components: appbar, input, button
+- Margin element: \`margin: height: 30\` for adding vertical space
+- Image element: \`image: url: "url"\` for displaying a logo
+- Password field: \`isPassword: true\` for secure input
+- Text styling: \`textColor: #2196F3\` for colored text
+- Transparent background: \`backgroundColor: transparent\` for borderless buttons
 `;
 
     // Simple markdown to HTML converter
