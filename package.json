@@ -1,7 +1,7 @@
 {
-  "name": "slml-plugin",
+  "name": "dcui-plugin",
   "version": "1.0.0",
-  "description": "SLML (Screen Layout Markup Language) plugin for rendering UI screens",
+  "description": "DCUI (DesignCodeUI) plugin for rendering UI screens",
   "main": "renderer.js",
   "scripts": {
     "build": "make build",
@@ -16,7 +16,7 @@
     "typescript": "^5.0.4"
   },
   "keywords": [
-    "slml",
+    "dcui",
     "ui",
     "markup",
     "renderer"

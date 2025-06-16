@@ -1,7 +1,7 @@
 /**
- * SLML Parser
+ * DCUI Parser
  *
- * This module provides functions to parse SLML (Screen Layout Markup Language) code blocks
+ * This module provides functions to parse DCUI (DesignCodeUI) code blocks
  * in Markdown content and convert them to structured JSON data.
  */
 /**
@@ -11,26 +11,26 @@ const DEFAULT_SCREEN_WIDTH = 360;
 const DEFAULT_SCREEN_HEIGHT = 640;
 const DEFAULT_SCREEN_BACKGROUND_COLOR = '#ffffff';
 /**
- * Extracts SLML code blocks from Markdown content
+ * Extracts DCUI code blocks from Markdown content
  * @param markdown - The Markdown content
- * @returns An array of SLML code blocks
+ * @returns An array of DCUI code blocks
  */
-function extractSLMLBlocks(markdown) {
-    const slmlBlockRegex = /```slml\n([\s\S]*?)```/g;
+function extractDCUIBlocks(markdown) {
+    const dcuiBlockRegex = /```dcui\n([\s\S]*?)```/g;
     const blocks = [];
     let match;
-    while ((match = slmlBlockRegex.exec(markdown)) !== null) {
+    while ((match = dcuiBlockRegex.exec(markdown)) !== null) {
         blocks.push(match[1]);
     }
     return blocks;
 }
 /**
- * Parses a single SLML code block
- * @param slml - The SLML code block
- * @returns A parsed SLML screen object
+ * Parses a single DCUI code block
+ * @param dcui - The DCUI code block
+ * @returns A parsed DCUI screen object
  */
-function parseSLML(slml) {
-    const lines = slml.trim().split('\n');
+function parseDCUI(dcui) {
+    const lines = dcui.trim().split('\n');
     const screen = {
         title: '',
         width: DEFAULT_SCREEN_WIDTH,
@@ -67,7 +67,7 @@ function parseSLML(slml) {
     // Parse elements
     let currentElement = null;
     let currentIndentation = 0;
-    let elementStack = [];
+    const elementStack = [];
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
         if (!line.trim())
@@ -186,7 +186,7 @@ function parseSLML(slml) {
                 const propertyMatch = /^\s*(\w+):\s*(.*)$/.exec(nextLine);
                 if (propertyMatch) {
                     const key = propertyMatch[1].trim();
-                    let value = propertyMatch[2].trim();
+                    const value = propertyMatch[2].trim();
                     // Handle special property values
                     if (key === 'size') {
                         // Parse size property (format: width, height)
@@ -287,7 +287,7 @@ function parseSLML(slml) {
                                 const childPropertyMatch = /^\s*([a-zA-Z]+):\s*(.*)$/.exec(childLine);
                                 if (childPropertyMatch) {
                                     const key = childPropertyMatch[1].trim();
-                                    let value = childPropertyMatch[2].trim();
+                                    const value = childPropertyMatch[2].trim();
                                     // Handle special property values
                                     if (value === 'true') {
                                         childElement[key] = true;
@@ -316,7 +316,7 @@ function parseSLML(slml) {
                         const propertyMatch = /^\s*([a-zA-Z]+):\s*(.*)$/.exec(nextLine);
                         if (propertyMatch) {
                             const key = propertyMatch[1].trim();
-                            let value = propertyMatch[2].trim();
+                            const value = propertyMatch[2].trim();
                             // Handle special property values
                             if (value === 'true') {
                                 element[key] = true;
@@ -348,7 +348,7 @@ function parseSLML(slml) {
             const propertyMatch = /^\s*(\w+):\s*(.*)$/.exec(line);
             if (propertyMatch) {
                 const key = propertyMatch[1].trim();
-                let value = propertyMatch[2].trim();
+                const value = propertyMatch[2].trim();
                 // Handle special property values
                 if (value === 'true') {
                     currentElement[key] = true;
@@ -375,19 +375,19 @@ function parseSLML(slml) {
             }
         }
     }
-    console.log('Parsed SLML to JSON:', JSON.stringify(screen, null, 2));
+    // console.log('Parsed DCUI to JSON:', JSON.stringify(screen, null, 2));
     return screen;
 }
 /**
- * Processes Markdown content to extract and parse SLML code blocks
+ * Processes Markdown content to extract and parse DCUI code blocks
  * @param markdown - The Markdown content
- * @returns An array of parsed SLML screen objects
+ * @returns An array of parsed DCUI screen objects
  */
 function processMarkdown(markdown) {
-    const blocks = extractSLMLBlocks(markdown);
-    const screens = blocks.map(block => parseSLML(block));
-    console.log('Processed Markdown to JSON:', JSON.stringify(screens, null, 2));
+    const blocks = extractDCUIBlocks(markdown);
+    const screens = blocks.map(block => parseDCUI(block));
+    // console.log('Processed Markdown to JSON:', JSON.stringify(screens, null, 2));
     return screens;
 }
 // Export functions for use in other modules
-export { parseSLML, processMarkdown };
+export { parseDCUI, processMarkdown };

@@ -106,7 +106,7 @@ image: https://example.com/image.jpg
 
   <script type="module">
     // Import the parser and renderer
-    import { parseSLML, processMarkdown } from '../parser.js';
+    import { parseDCUI, processMarkdown } from '../parser.js';
     import { renderSLMLToSVG } from '../renderer.js';
 
     // Test cases
@@ -148,14 +148,14 @@ image: https://example.com/image.jpg
         try {
           // Parse the SLML
           const parsedScreen = processMarkdown(testCase.slml)[0];
-          
+
           // Display the parsed data
           document.getElementById(testCase.dataId).textContent = JSON.stringify(parsedScreen, null, 2);
-          
+
           // Render the SVG
           const svg = renderSLMLToSVG(parsedScreen, 0.6);
           document.getElementById(testCase.id).innerHTML = svg;
-          
+
           console.log(`Parsed Screen for ${testCase.id}:`, parsedScreen);
         } catch (error) {
           document.getElementById(testCase.id).innerHTML = `<div style="color: red;">Error: ${error.message}</div>`;

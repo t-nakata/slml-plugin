@@ -1,4 +1,4 @@
-# Makefile for SLML Plugin
+# Makefile for DCUI Plugin
 
 # TypeScript compiler
 TSC = tsc
@@ -17,7 +17,7 @@ all: $(JS_FILES)
 
 # Build specific files in order
 build: 
-	@echo "Building SLML Plugin..."
+	@echo "Building DCUI Plugin..."
 	@for file in $(SPECIFIC_TS_FILES); do \
 		echo "Compiling $$file..."; \
 		$(TSC) --target ES2020 --module ES2020 --moduleResolution node $$file; \

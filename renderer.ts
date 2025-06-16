@@ -1,11 +1,27 @@
 /**
- * SLML Renderer
+ * DCUI Renderer
  * 
- * This module provides functions to render SLML (Screen Layout Markup Language) data
+ * This module provides functions to render DCUI (DesignCodeUI) data
  * as SVG diagrams.
  */
 
-import { parseSLML, processMarkdown, SLMLScreen, SLMLElement } from './parser.js';
+import { processMarkdown } from './parser.js';
+
+// Define interfaces locally since they're not available in the compiled JS
+interface DCUIScreen {
+  title: string;
+  width: number;
+  height: number;
+  backgroundColor: string;
+  elements: DCUIElement[];
+}
+
+interface DCUIElement {
+  type: string;
+  label: string;
+  [key: string]: string | number | boolean | DCUIElement[]; // Allow specific property types at the same level as type and label
+  children?: DCUIElement[];
+}
 import { createIconSVG } from './icons.js';
 
 // Constants for rendering
@@ -24,12 +40,12 @@ const DEFAULT_BUTTON_BG_COLOR = '#007bff';
 const DEFAULT_FAB_BG_COLOR = '#FF4081';
 
 /**
- * Renders a parsed SLML screen as an SVG diagram
- * @param screen - The parsed SLML screen
+ * Renders a parsed DCUI screen as an SVG diagram
+ * @param screen - The parsed DCUI screen
  * @param scale - Optional scale factor for the SVG (default: 1.0)
  * @returns SVG markup as a string
  */
-function renderSLMLToSVG(screen: SLMLScreen, scale: number = 1.0): string {
+function renderSLMLToSVG(screen: DCUIScreen, scale = 1.0): string {
   const width = screen.width;
   const height = screen.height;
   const scaledWidth = width * scale;
@@ -54,58 +70,58 @@ function renderSLMLToSVG(screen: SLMLScreen, scale: number = 1.0): string {
 }
 
 /**
- * Renders a single SLML element as SVG
- * @param element - The SLML element to render
+ * Renders a single DCUI element as SVG
+ * @param element - The DCUI element to render
  * @param screenWidth - The width of the screen
  * @param yOffset - The vertical offset for this element
  * @param scale - Scale factor for the SVG
  * @returns Object containing the SVG markup and the next Y position
  */
-function renderElement(element: SLMLElement, screenWidth: number, yOffset: number, scale: number, screenHeight: number = 0): { svg: string, nextY: number } {
+function renderElement(element: DCUIElement, screenWidth: number, yOffset: number, scale: number, screenHeight = 0): { svg: string, nextY: number } {
   const type = element.type.toLowerCase();
 
   switch (type) {
-    case 'appbar':
-      return renderAppBar(element, screenWidth, yOffset, scale);
-    case 'text':
-      return renderText(element, screenWidth, yOffset, scale);
-    case 'input':
-      return renderInput(element, screenWidth, yOffset, scale);
-    case 'button':
-      return renderButton(element, screenWidth, yOffset, scale);
-    case 'checkbox':
-      return renderCheckbox(element, screenWidth, yOffset, scale);
-    case 'link':
-      return renderLink(element, screenWidth, yOffset, scale);
-    case 'image':
-      return renderImage(element, screenWidth, yOffset, scale);
-    case 'floatingactionbutton':
-      return renderFloatingActionButton(element, screenWidth, yOffset, scale, screenHeight);
-    case 'bottomnavigationbar':
-      return renderBottomNavigationBar(element, screenWidth, yOffset, scale, screenHeight);
-    case 'margin':
-      return renderMargin(element, screenWidth, yOffset, scale);
-    default:
-      // For unsupported elements, render a placeholder
-      return {
-        svg: `<rect x="${ELEMENT_MARGIN}" y="${yOffset}" width="${screenWidth - 2 * ELEMENT_MARGIN}" height="${ELEMENT_HEIGHT}" fill="#f0f0f0" rx="${ELEMENT_RADIUS}" />
+  case 'appbar':
+    return renderAppBar(element, screenWidth, yOffset, scale);
+  case 'text':
+    return renderText(element, screenWidth, yOffset, scale);
+  case 'input':
+    return renderInput(element, screenWidth, yOffset, scale);
+  case 'button':
+    return renderButton(element, screenWidth, yOffset, scale);
+  case 'checkbox':
+    return renderCheckbox(element, screenWidth, yOffset, scale);
+  case 'link':
+    return renderLink(element, screenWidth, yOffset, scale);
+  case 'image':
+    return renderImage(element, screenWidth, yOffset, scale);
+  case 'floatingactionbutton':
+    return renderFloatingActionButton(element, screenWidth, yOffset, scale, screenHeight);
+  case 'bottomnavigationbar':
+    return renderBottomNavigationBar(element, screenWidth, yOffset, scale, screenHeight);
+  case 'margin':
+    return renderMargin(element, screenWidth, yOffset, scale);
+  default:
+    // For unsupported elements, render a placeholder
+    return {
+      svg: `<rect x="${ELEMENT_MARGIN}" y="${yOffset}" width="${screenWidth - 2 * ELEMENT_MARGIN}" height="${ELEMENT_HEIGHT}" fill="#f0f0f0" rx="${ELEMENT_RADIUS}" />
               <text x="${screenWidth / 2}" y="${yOffset + ELEMENT_HEIGHT / 2}" font-family="${FONT_FAMILY}" font-size="${DEFAULT_FONT_SIZE}" fill="${DEFAULT_TEXT_COLOR}" text-anchor="middle" dominant-baseline="middle">
                 ${element.type}: ${element.label}
               </text>`,
-        nextY: yOffset + ELEMENT_HEIGHT + ELEMENT_PADDING
-      };
+      nextY: yOffset + ELEMENT_HEIGHT + ELEMENT_PADDING
+    };
   }
 }
 
 /**
  * Renders an AppBar element
  */
-function renderAppBar(element: SLMLElement, screenWidth: number, yOffset: number, scale: number): { svg: string, nextY: number } {
+function renderAppBar(element: DCUIElement, screenWidth: number, yOffset: number, _scale: number): { svg: string, nextY: number } {
   const height = DEFAULT_APPBAR_HEIGHT;
   const backgroundColor = element.backgroundColor || DEFAULT_APPBAR_BG_COLOR;
   const showBackButton = element.showBackButton || false;
   const centerTitle = element.centerTitle || false;
-  const actionIcons = element.actionIcons ? element.actionIcons.split('|') : [];
+  const actionIcons = element.actionIcons && typeof element.actionIcons === 'string' ? element.actionIcons.split('|') : [];
 
   let svg = `<rect x="0" y="${yOffset}" width="${screenWidth}" height="${height}" fill="${backgroundColor}" />`;
 
@@ -145,13 +161,13 @@ function renderAppBar(element: SLMLElement, screenWidth: number, yOffset: number
 /**
  * Renders a Text element
  */
-function renderText(element: SLMLElement, screenWidth: number, yOffset: number, scale: number): { svg: string, nextY: number } {
+function renderText(element: DCUIElement, screenWidth: number, yOffset: number, _scale: number): { svg: string, nextY: number } {
   const content = element.content || element.label;
   const align = element.align || 'center';
-  const width = element.width || (screenWidth - 2 * ELEMENT_MARGIN);
-  const fontSize = element.fontSize || DEFAULT_FONT_SIZE;
+  const width = typeof element.width === 'number' ? element.width : (screenWidth - 2 * ELEMENT_MARGIN);
+  const fontSize = typeof element.fontSize === 'number' ? element.fontSize : DEFAULT_FONT_SIZE;
   const color = element.color || DEFAULT_TEXT_COLOR;
-  const padding = element.padding || 0;
+  const padding = typeof element.padding === 'number' ? element.padding : 0;
 
   // Calculate x position based on alignment
   let x;
@@ -168,7 +184,7 @@ function renderText(element: SLMLElement, screenWidth: number, yOffset: number, 
   yOffset += padding;
 
   // Wrap text to fit within the width
-  const words = content.split(' ');
+  const words = typeof content === 'string' ? content.split(' ') : [];
   const lines: string[] = [];
   let currentLine = '';
 
@@ -208,12 +224,12 @@ function renderText(element: SLMLElement, screenWidth: number, yOffset: number, 
 /**
  * Renders an Input element
  */
-function renderInput(element: SLMLElement, screenWidth: number, yOffset: number, scale: number): { svg: string, nextY: number } {
+function renderInput(element: DCUIElement, screenWidth: number, yOffset: number, _scale: number): { svg: string, nextY: number } {
   const label = element.label;
   const align = element.align || 'center';
-  const width = element.width || (screenWidth - 2 * ELEMENT_MARGIN);
+  const width = typeof element.width === 'number' ? element.width : (screenWidth - 2 * ELEMENT_MARGIN);
   const backgroundColor = element.backgroundColor || '#ffffff';
-  const padding = element.padding || 0;
+  const padding = typeof element.padding === 'number' ? element.padding : 0;
 
   // Calculate x position based on alignment
   let x;
@@ -243,12 +259,12 @@ function renderInput(element: SLMLElement, screenWidth: number, yOffset: number,
 /**
  * Renders a Button element
  */
-function renderButton(element: SLMLElement, screenWidth: number, yOffset: number, scale: number): { svg: string, nextY: number } {
+function renderButton(element: DCUIElement, screenWidth: number, yOffset: number, _scale: number): { svg: string, nextY: number } {
   const label = element.label;
   const align = element.align || 'center';
-  const width = element.width || Math.min(200, screenWidth - 2 * ELEMENT_MARGIN);
+  const width = typeof element.width === 'number' ? element.width : Math.min(200, screenWidth - 2 * ELEMENT_MARGIN);
   const backgroundColor = element.backgroundColor || DEFAULT_BUTTON_BG_COLOR;
-  const padding = element.padding || 0;
+  const padding = typeof element.padding === 'number' ? element.padding : 0;
 
   // Calculate x position based on alignment
   let x;
@@ -278,12 +294,12 @@ function renderButton(element: SLMLElement, screenWidth: number, yOffset: number
 /**
  * Renders a Checkbox element
  */
-function renderCheckbox(element: SLMLElement, screenWidth: number, yOffset: number, scale: number): { svg: string, nextY: number } {
+function renderCheckbox(element: DCUIElement, screenWidth: number, yOffset: number, _scale: number): { svg: string, nextY: number } {
   const label = element.label;
   const align = element.align || 'center';
-  const width = element.width || (screenWidth - 2 * ELEMENT_MARGIN);
+  const width = typeof element.width === 'number' ? element.width : (screenWidth - 2 * ELEMENT_MARGIN);
   const checked = element.checked || false;
-  const padding = element.padding || 0;
+  const padding = typeof element.padding === 'number' ? element.padding : 0;
 
   // Calculate x position based on alignment
   let x;
@@ -339,11 +355,11 @@ function renderCheckbox(element: SLMLElement, screenWidth: number, yOffset: numb
 /**
  * Renders a Link element
  */
-function renderLink(element: SLMLElement, screenWidth: number, yOffset: number, scale: number): { svg: string, nextY: number } {
+function renderLink(element: DCUIElement, screenWidth: number, yOffset: number, _scale: number): { svg: string, nextY: number } {
   const label = element.label;
   const align = element.align || 'center';
-  const width = element.width || (screenWidth - 2 * ELEMENT_MARGIN);
-  const padding = element.padding || 0;
+  const width = typeof element.width === 'number' ? element.width : (screenWidth - 2 * ELEMENT_MARGIN);
+  const padding = typeof element.padding === 'number' ? element.padding : 0;
 
   // Calculate x position based on alignment
   let x;
@@ -376,12 +392,13 @@ function renderLink(element: SLMLElement, screenWidth: number, yOffset: number, 
 /**
  * Renders an Image element
  */
-function renderImage(element: SLMLElement, screenWidth: number, yOffset: number, scale: number): { svg: string, nextY: number } {
+function renderImage(element: DCUIElement, screenWidth: number, yOffset: number, _scale: number): { svg: string, nextY: number } {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const url = element.url || element.label;
   const align = element.align || 'center';
-  const width = element.width || 200;
-  const height = element.height || 150;
-  const padding = element.padding || 0;
+  const width = typeof element.width === 'number' ? element.width : 200;
+  const height = typeof element.height === 'number' ? element.height : 150;
+  const padding = typeof element.padding === 'number' ? element.padding : 0;
 
   // Calculate x position based on alignment
   let x;
@@ -413,7 +430,7 @@ function renderImage(element: SLMLElement, screenWidth: number, yOffset: number,
 /**
  * Renders a FloatingActionButton element
  */
-function renderFloatingActionButton(element: SLMLElement, screenWidth: number, yOffset: number, scale: number, screenHeight: number = 0): { svg: string, nextY: number } {
+function renderFloatingActionButton(element: DCUIElement, screenWidth: number, yOffset: number, scale: number, screenHeight = 0): { svg: string, nextY: number } {
   const label = element.label;
   const align = element.align || 'right';
   const backgroundColor = element.backgroundColor || DEFAULT_FAB_BG_COLOR;
@@ -455,7 +472,7 @@ function renderFloatingActionButton(element: SLMLElement, screenWidth: number, y
 /**
  * Renders a BottomNavigationBar element
  */
-function renderBottomNavigationBar(element: SLMLElement, screenWidth: number, yOffset: number, scale: number, screenHeight: number = 0): { svg: string, nextY: number } {
+function renderBottomNavigationBar(element: DCUIElement, screenWidth: number, yOffset: number, scale: number, screenHeight = 0): { svg: string, nextY: number } {
   const height = DEFAULT_BOTTOM_NAV_HEIGHT;
   const backgroundColor = element.backgroundColor || DEFAULT_BOTTOM_NAV_BG_COLOR;
 
@@ -476,7 +493,7 @@ function renderBottomNavigationBar(element: SLMLElement, screenWidth: number, yO
       const color = active ? '#007bff' : '#6c757d';
 
       // Check if this is a Material Design Icon reference (starts with "mdi")
-      if (icon.startsWith('mdi')) {
+      if (typeof icon === 'string' && icon.startsWith('mdi')) {
         // Use the createIconSVG function to create an SVG for the icon
         svg += createIconSVG(icon, itemX + itemWidth / 2, bottomPosition + height / 2 - 10, 24, color);
         svg += `
@@ -500,8 +517,9 @@ function renderBottomNavigationBar(element: SLMLElement, screenWidth: number, yO
         `;
       } else {
         // Regular text/emoji icon
+        const iconText = typeof icon === 'string' ? icon : '';
         svg += `
-          <text x="${itemX + itemWidth / 2}" y="${bottomPosition + height / 2 - 10}" font-family="${FONT_FAMILY}" font-size="20" fill="${color}" text-anchor="middle" dominant-baseline="middle">${icon}</text>
+          <text x="${itemX + itemWidth / 2}" y="${bottomPosition + height / 2 - 10}" font-family="${FONT_FAMILY}" font-size="20" fill="${color}" text-anchor="middle" dominant-baseline="middle">${iconText}</text>
           <text x="${itemX + itemWidth / 2}" y="${bottomPosition + height / 2 + 15}" font-family="${FONT_FAMILY}" font-size="12" fill="${color}" text-anchor="middle" dominant-baseline="middle">${item.label}</text>
         `;
       }
@@ -517,9 +535,10 @@ function renderBottomNavigationBar(element: SLMLElement, screenWidth: number, yO
 /**
  * Renders a Margin element
  */
-function renderMargin(element: SLMLElement, screenWidth: number, yOffset: number, scale: number): { svg: string, nextY: number } {
-  const width = element.width || screenWidth;
-  const height = element.height || 20;
+function renderMargin(element: DCUIElement, screenWidth: number, yOffset: number, _scale: number): { svg: string, nextY: number } {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const width = typeof element.width === 'number' ? element.width : screenWidth;
+  const height = typeof element.height === 'number' ? element.height : 20;
 
   // No visible rendering for margin, just add space
   return {
@@ -534,7 +553,7 @@ function renderMargin(element: SLMLElement, screenWidth: number, yOffset: number
  * @param scale - Optional scale factor for the SVG (default: 1.0)
  * @returns Processed Markdown with SLML blocks replaced by SVG
  */
-function replaceSLMLWithSVG(markdown: string, scale: number = 1.0): string {
+function replaceSLMLWithSVG(markdown: string, scale = 1.0): string {
   // First, process the markdown to get all SLML screens
   const screens = processMarkdown(markdown);
 

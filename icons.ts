@@ -64,7 +64,7 @@ export function getIconPath(iconName: string): string | undefined {
  * @param color - The color of the icon
  * @returns SVG markup for the icon, or a placeholder if the icon is not found
  */
-export function createIconSVG(iconName: string, x: number, y: number, size: number = 24, color: string = 'currentColor'): string {
+export function createIconSVG(iconName: string, x: number, y: number, size = 24, color = 'currentColor'): string {
   const iconPath = getIconPath(iconName);
 
   if (iconPath) {

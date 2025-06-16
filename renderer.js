@@ -1,7 +1,7 @@
 /**
- * SLML Renderer
+ * DCUI Renderer
  *
- * This module provides functions to render SLML (Screen Layout Markup Language) data
+ * This module provides functions to render DCUI (DesignCodeUI) data
  * as SVG diagrams.
  */
 import { processMarkdown } from './parser.js';
@@ -21,8 +21,8 @@ const DEFAULT_BOTTOM_NAV_BG_COLOR = '#f8f9fa';
 const DEFAULT_BUTTON_BG_COLOR = '#007bff';
 const DEFAULT_FAB_BG_COLOR = '#FF4081';
 /**
- * Renders a parsed SLML screen as an SVG diagram
- * @param screen - The parsed SLML screen
+ * Renders a parsed DCUI screen as an SVG diagram
+ * @param screen - The parsed DCUI screen
  * @param scale - Optional scale factor for the SVG (default: 1.0)
  * @returns SVG markup as a string
  */
@@ -45,8 +45,8 @@ function renderSLMLToSVG(screen, scale = 1.0) {
     return svg;
 }
 /**
- * Renders a single SLML element as SVG
- * @param element - The SLML element to render
+ * Renders a single DCUI element as SVG
+ * @param element - The DCUI element to render
  * @param screenWidth - The width of the screen
  * @param yOffset - The vertical offset for this element
  * @param scale - Scale factor for the SVG
@@ -89,12 +89,12 @@ function renderElement(element, screenWidth, yOffset, scale, screenHeight = 0) {
 /**
  * Renders an AppBar element
  */
-function renderAppBar(element, screenWidth, yOffset, scale) {
+function renderAppBar(element, screenWidth, yOffset, _scale) {
     const height = DEFAULT_APPBAR_HEIGHT;
     const backgroundColor = element.backgroundColor || DEFAULT_APPBAR_BG_COLOR;
     const showBackButton = element.showBackButton || false;
     const centerTitle = element.centerTitle || false;
-    const actionIcons = element.actionIcons ? element.actionIcons.split('|') : [];
+    const actionIcons = element.actionIcons && typeof element.actionIcons === 'string' ? element.actionIcons.split('|') : [];
     let svg = `<rect x="0" y="${yOffset}" width="${screenWidth}" height="${height}" fill="${backgroundColor}" />`;
     // Back button
     if (showBackButton) {
@@ -128,13 +128,13 @@ function renderAppBar(element, screenWidth, yOffset, scale) {
 /**
  * Renders a Text element
  */
-function renderText(element, screenWidth, yOffset, scale) {
+function renderText(element, screenWidth, yOffset, _scale) {
     const content = element.content || element.label;
     const align = element.align || 'center';
-    const width = element.width || (screenWidth - 2 * ELEMENT_MARGIN);
-    const fontSize = element.fontSize || DEFAULT_FONT_SIZE;
+    const width = typeof element.width === 'number' ? element.width : (screenWidth - 2 * ELEMENT_MARGIN);
+    const fontSize = typeof element.fontSize === 'number' ? element.fontSize : DEFAULT_FONT_SIZE;
     const color = element.color || DEFAULT_TEXT_COLOR;
-    const padding = element.padding || 0;
+    const padding = typeof element.padding === 'number' ? element.padding : 0;
     // Calculate x position based on alignment
     let x;
     if (align === 'left') {
@@ -150,7 +150,7 @@ function renderText(element, screenWidth, yOffset, scale) {
     // Apply padding to yOffset
     yOffset += padding;
     // Wrap text to fit within the width
-    const words = content.split(' ');
+    const words = typeof content === 'string' ? content.split(' ') : [];
     const lines = [];
     let currentLine = '';
     // Simple text wrapping algorithm
@@ -184,12 +184,12 @@ function renderText(element, screenWidth, yOffset, scale) {
 /**
  * Renders an Input element
  */
-function renderInput(element, screenWidth, yOffset, scale) {
+function renderInput(element, screenWidth, yOffset, _scale) {
     const label = element.label;
     const align = element.align || 'center';
-    const width = element.width || (screenWidth - 2 * ELEMENT_MARGIN);
+    const width = typeof element.width === 'number' ? element.width : (screenWidth - 2 * ELEMENT_MARGIN);
     const backgroundColor = element.backgroundColor || '#ffffff';
-    const padding = element.padding || 0;
+    const padding = typeof element.padding === 'number' ? element.padding : 0;
     // Calculate x position based on alignment
     let x;
     if (align === 'left') {
@@ -216,12 +216,12 @@ function renderInput(element, screenWidth, yOffset, scale) {
 /**
  * Renders a Button element
  */
-function renderButton(element, screenWidth, yOffset, scale) {
+function renderButton(element, screenWidth, yOffset, _scale) {
     const label = element.label;
     const align = element.align || 'center';
-    const width = element.width || Math.min(200, screenWidth - 2 * ELEMENT_MARGIN);
+    const width = typeof element.width === 'number' ? element.width : Math.min(200, screenWidth - 2 * ELEMENT_MARGIN);
     const backgroundColor = element.backgroundColor || DEFAULT_BUTTON_BG_COLOR;
-    const padding = element.padding || 0;
+    const padding = typeof element.padding === 'number' ? element.padding : 0;
     // Calculate x position based on alignment
     let x;
     if (align === 'left') {
@@ -248,12 +248,12 @@ function renderButton(element, screenWidth, yOffset, scale) {
 /**
  * Renders a Checkbox element
  */
-function renderCheckbox(element, screenWidth, yOffset, scale) {
+function renderCheckbox(element, screenWidth, yOffset, _scale) {
     const label = element.label;
     const align = element.align || 'center';
-    const width = element.width || (screenWidth - 2 * ELEMENT_MARGIN);
+    const width = typeof element.width === 'number' ? element.width : (screenWidth - 2 * ELEMENT_MARGIN);
     const checked = element.checked || false;
-    const padding = element.padding || 0;
+    const padding = typeof element.padding === 'number' ? element.padding : 0;
     // Calculate x position based on alignment
     let x;
     if (align === 'left') {
@@ -303,11 +303,11 @@ function renderCheckbox(element, screenWidth, yOffset, scale) {
 /**
  * Renders a Link element
  */
-function renderLink(element, screenWidth, yOffset, scale) {
+function renderLink(element, screenWidth, yOffset, _scale) {
     const label = element.label;
     const align = element.align || 'center';
-    const width = element.width || (screenWidth - 2 * ELEMENT_MARGIN);
-    const padding = element.padding || 0;
+    const width = typeof element.width === 'number' ? element.width : (screenWidth - 2 * ELEMENT_MARGIN);
+    const padding = typeof element.padding === 'number' ? element.padding : 0;
     // Calculate x position based on alignment
     let x;
     if (align === 'left') {
@@ -336,12 +336,13 @@ function renderLink(element, screenWidth, yOffset, scale) {
 /**
  * Renders an Image element
  */
-function renderImage(element, screenWidth, yOffset, scale) {
+function renderImage(element, screenWidth, yOffset, _scale) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const url = element.url || element.label;
     const align = element.align || 'center';
-    const width = element.width || 200;
-    const height = element.height || 150;
-    const padding = element.padding || 0;
+    const width = typeof element.width === 'number' ? element.width : 200;
+    const height = typeof element.height === 'number' ? element.height : 150;
+    const padding = typeof element.padding === 'number' ? element.padding : 0;
     // Calculate x position based on alignment
     let x;
     if (align === 'left') {
@@ -426,7 +427,7 @@ function renderBottomNavigationBar(element, screenWidth, yOffset, scale, screenH
             const active = item.active || false;
             const color = active ? '#007bff' : '#6c757d';
             // Check if this is a Material Design Icon reference (starts with "mdi")
-            if (icon.startsWith('mdi')) {
+            if (typeof icon === 'string' && icon.startsWith('mdi')) {
                 // Use the createIconSVG function to create an SVG for the icon
                 svg += createIconSVG(icon, itemX + itemWidth / 2, bottomPosition + height / 2 - 10, 24, color);
                 svg += `
@@ -449,8 +450,9 @@ function renderBottomNavigationBar(element, screenWidth, yOffset, scale, screenH
             }
             else {
                 // Regular text/emoji icon
+                const iconText = typeof icon === 'string' ? icon : '';
                 svg += `
-          <text x="${itemX + itemWidth / 2}" y="${bottomPosition + height / 2 - 10}" font-family="${FONT_FAMILY}" font-size="20" fill="${color}" text-anchor="middle" dominant-baseline="middle">${icon}</text>
+          <text x="${itemX + itemWidth / 2}" y="${bottomPosition + height / 2 - 10}" font-family="${FONT_FAMILY}" font-size="20" fill="${color}" text-anchor="middle" dominant-baseline="middle">${iconText}</text>
           <text x="${itemX + itemWidth / 2}" y="${bottomPosition + height / 2 + 15}" font-family="${FONT_FAMILY}" font-size="12" fill="${color}" text-anchor="middle" dominant-baseline="middle">${item.label}</text>
         `;
             }
@@ -464,9 +466,10 @@ function renderBottomNavigationBar(element, screenWidth, yOffset, scale, screenH
 /**
  * Renders a Margin element
  */
-function renderMargin(element, screenWidth, yOffset, scale) {
-    const width = element.width || screenWidth;
-    const height = element.height || 20;
+function renderMargin(element, screenWidth, yOffset, _scale) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const width = typeof element.width === 'number' ? element.width : screenWidth;
+    const height = typeof element.height === 'number' ? element.height : 20;
     // No visible rendering for margin, just add space
     return {
         svg: '',

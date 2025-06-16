@@ -1,5 +1,5 @@
 // Import the parser
-import { parseSLML, processMarkdown } from '../parser.js';
+import { parseDCUI, processMarkdown } from '../parser.js';
 
 // Test SLML with all element types
 const testSLML = `# All Elements Test
@@ -74,7 +74,7 @@ bottomNavigationBar:
         icon: ⚙️`;
 
 // Parse the SLML
-const parsedScreen = parseSLML(testSLML);
+const parsedScreen = parseDCUI(testSLML);
 
 // Output the parsed result
 console.log('Parsed Screen:', JSON.stringify(parsedScreen, null, 2));

@@ -1,12 +1,12 @@
-# SLML Plugin
+# DCUI Plugin
 
-SLML (Screen Layout Markup Language) is a simple markup language for describing UI screens with various elements like inputs, buttons, checkboxes, etc. This plugin allows you to render SLML code blocks in Markdown as SVG diagrams.
+DCUI (DesignCodeUI) is a simple markup language for describing UI screens with various elements like inputs, buttons, checkboxes, etc. This plugin allows you to render DCUI code blocks in Markdown as SVG diagrams.
 
 ## Features
 
-- Parse SLML code blocks in Markdown
-- Convert SLML to structured JSON data
-- Render SLML as SVG diagrams
+- Parse DCUI code blocks in Markdown
+- Convert DCUI to structured JSON data
+- Render DCUI as SVG diagrams
 - Download rendered SVG diagrams as files
 - Custom screen size specification
 - Element alignment control (left, center, right)
@@ -42,9 +42,9 @@ SLML (Screen Layout Markup Language) is a simple markup language for describing 
   - Expansion panel (展開パネル)
   - Navigation drawer (ナビゲーションドロワー)
 
-## SLML Syntax
+## DCUI Syntax
 
-SLML uses indentation to define properties and child elements:
+DCUI uses indentation to define properties and child elements:
 
 ```
 # Screen Title
@@ -86,7 +86,7 @@ Where:
 
 ### Material Design Icons
 
-SLML supports Material Design Icons from the @mdi/svg library via CDN. You can use these icons in various elements, such as the AppBar's action icons.
+DCUI supports Material Design Icons from the @mdi/svg library via CDN. You can use these icons in various elements, such as the AppBar's action icons.
 
 Currently supported icons:
 - `mdiAccountCircle` - Account circle icon
@@ -103,7 +103,7 @@ Currently supported icons:
 
 To use these icons, simply reference them by name in the appropriate property. For example:
 
-```slml
+```dcui
 - Appbar: Home { backgroundColor: #2196F3, actionIcons: mdiMagnify|mdiCog|mdiAccountCircle }
 ```
 
@@ -205,9 +205,9 @@ To use these icons, simply reference them by name in the appropriate property. F
 
 ### Theme Support
 
-SLMLはMaterial Design 3のテーマシステムをサポートしています：
+DCUIはMaterial Design 3のテーマシステムをサポートしています：
 
-```slml
+```dcui
 # アカウント作成
 screen:
   title: "アカウント作成"
@@ -229,7 +229,7 @@ link:
 
 Example with screen size and element alignment:
 
-```slml
+```dcui
 # アカウント作成
 screen:
   title: "アカウント作成"
@@ -253,7 +253,7 @@ link:
 
 Example with text wrapping and custom font properties:
 
-```slml
+```dcui
 # Text Example
 screen:
   title: "Text Example"
@@ -268,7 +268,7 @@ text:
 
 Example with Flutter UI components, background colors, and padding:
 
-```slml
+```dcui
 # Flutter UI
 screen:
   title: "Flutter UI"
@@ -301,7 +301,7 @@ bottomNavigationBar:
 
 User profile example:
 
-```slml
+```dcui
 # ユーザープロフィール画面
 screen:
   title: "プロフィール"
@@ -329,7 +329,7 @@ button:
 
 Login form example:
 
-```slml
+```dcui
 # ログインフォーム
 screen:
   title: "ログイン"
@@ -357,14 +357,14 @@ button:
 
 ### In Markdown
 
-To use SLML in your Markdown files, simply create a code block with the `slml` language identifier:
+To use DCUI in your Markdown files, simply create a code block with the `dcui` language identifier:
 
 ````markdown
 # My Document
 
 Here's a UI screen:
 
-```slml
+```dcui
 # Login
 screen:
   title: "Login"
@@ -383,23 +383,23 @@ link:
 
 #### Web Integration
 
-1. Include the SLML plugin scripts in your HTML:
+1. Include the DCUI plugin scripts in your HTML:
 
 ```html
-<script type="module" src="path/to/slml-plugin/parser.js"></script>
-<script type="module" src="path/to/slml-plugin/renderer.js"></script>
+<script type="module" src="path/to/dcui-plugin/parser.js"></script>
+<script type="module" src="path/to/dcui-plugin/renderer.js"></script>
 ```
 
 2. Use the plugin to process Markdown content:
 
 ```javascript
-import { replaceSLMLWithSVG } from './path/to/slml-plugin/renderer.js';
+import { replaceDCUIWithSVG } from './path/to/dcui-plugin/renderer.js';
 
 // Get Markdown content
 const markdownContent = document.getElementById('markdown-content').value;
 
-// Replace SLML code blocks with SVG
-const processedMarkdown = replaceSLMLWithSVG(markdownContent);
+// Replace DCUI code blocks with SVG
+const processedMarkdown = replaceDCUIWithSVG(markdownContent);
 
 // Display the processed Markdown
 document.getElementById('preview').innerHTML = processedMarkdown;
@@ -409,26 +409,26 @@ document.getElementById('preview').innerHTML = processedMarkdown;
 
 For JetBrains IDE integration, you can create a plugin that:
 
-1. Registers a language injector for SLML code blocks in Markdown
-2. Provides a preview panel that renders the SLML as SVG
+1. Registers a language injector for DCUI code blocks in Markdown
+2. Provides a preview panel that renders the DCUI as SVG
 3. Updates the preview in real-time as you edit the Markdown
 
 ## Demo
 
 A demo HTML page is included in the plugin. Open `index.html` in your browser to see the plugin in action. The demo includes:
 
-- A text editor for entering Markdown with SLML code blocks
-- A preview pane that renders the SLML as SVG
+- A text editor for entering Markdown with DCUI code blocks
+- A preview pane that renders the DCUI as SVG
 - Buttons to render, load examples, clear the editor, and download the SVG
-- Example SLML code to get you started
+- Example DCUI code to get you started
 
-You can download the rendered SVG diagram by clicking the "Download SVG" button after rendering your SLML code.
+You can download the rendered SVG diagram by clicking the "Download SVG" button after rendering your DCUI code.
 
 ## Development
 
 ### Project Structure
 
-- `parser.ts` / `parser.js`: SLML parser implementation
+- `parser.ts` / `parser.js`: DCUI parser implementation
 - `renderer.ts` / `renderer.js`: SVG renderer implementation
 - `index.html`: Demo page
 - `README.md`: Documentation
