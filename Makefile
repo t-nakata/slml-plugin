@@ -35,12 +35,29 @@ build:
 clean:
 	rm -f $(JS_FILES)
 
+# Linting
+lint:
+	@echo "Linting TypeScript files..."
+	npx eslint --ext .ts .
+
+# Lint and fix
+lint-fix:
+	@echo "Linting and fixing TypeScript files..."
+	npx eslint --ext .ts . --fix
+
+# CI target
+ci: lint build
+	@echo "CI checks completed successfully!"
+
 # Help target
 help:
 	@echo "Available targets:"
 	@echo "  all       - Build all TypeScript files (default)"
 	@echo "  build     - Build specific TypeScript files in dependency order"
 	@echo "  clean     - Remove all generated JavaScript files"
+	@echo "  lint      - Run ESLint on TypeScript files"
+	@echo "  lint-fix  - Run ESLint and fix issues automatically"
+	@echo "  ci        - Run linting and build (for CI/CD)"
 	@echo "  help      - Display this help message"
 
-.PHONY: all build clean help
+.PHONY: all build clean lint lint-fix ci help

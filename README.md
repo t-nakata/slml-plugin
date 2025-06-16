@@ -438,9 +438,36 @@ You can download the rendered SVG diagram by clicking the "Download SVG" button 
 If you make changes to the TypeScript files, you'll need to compile them to JavaScript:
 
 ```bash
-# Using TypeScript compiler
-tsc parser.ts --target es2015 --module es2015
-tsc renderer.ts --target es2015 --module es2015
+# Using Makefile
+make build
+
+# Or using TypeScript compiler directly
+tsc parser.ts --target ES2020 --module ES2020 --moduleResolution node
+tsc renderer.ts --target ES2020 --module ES2020 --moduleResolution node
+```
+
+### Linting
+
+The project uses ESLint for code quality and style consistency. To run the linter:
+
+```bash
+# Using Makefile
+make lint
+
+# To automatically fix linting issues
+make lint-fix
+
+# Using npm scripts
+npm run lint
+npm run lint:fix
+```
+
+### Continuous Integration
+
+For CI/CD pipelines, you can use the `ci` target which runs both linting and building:
+
+```bash
+make ci
 ```
 
 ## License
