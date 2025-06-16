@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Icon and Image Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    .test-case {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .test-case h2 {
+      margin-top: 0;
+      color: #3498db;
+    }
+    .code {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+    .result {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      min-height: 200px;
+    }
+    .parsed-data {
+      background-color: #f8f8f8;
+      padding: 15px;
+      border-radius: 4px;
+      margin-top: 10px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      overflow: auto;
+      max-height: 300px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Icon and Image Test</h1>
+    <p>This page tests that Material Design icons and image icons work correctly in bottomNavigationItems.</p>
+
+    <div class="test-case">
+      <h2>Test Case: Material Design Icons</h2>
+      <div class="code">```slml
+# Material Design Icons Test
+screen:
+  title: "Material Design Icons Test"
+  size: 400, 600
+  backgroundColor: #f5f5f5
+
+bottomNavigationBar:
+  backgroundColor: #ffffff
+  children:
+    - bottomNavigationItem:
+        label: "Home"
+        icon: mdiHome
+        active: true
+    - bottomNavigationItem:
+        label: "Search"
+        icon: mdiMagnify
+    - bottomNavigationItem:
+        label: "Settings"
+        icon: mdiSettings
+```</div>
+      <div class="result" id="result1"></div>
+      <h3>Parsed Data:</h3>
+      <div class="parsed-data" id="parsed-data1"></div>
+    </div>
+
+    <div class="test-case">
+      <h2>Test Case: Image Icons</h2>
+      <div class="code">```slml
+# Image Icons Test
+screen:
+  title: "Image Icons Test"
+  size: 400, 600
+  backgroundColor: #f5f5f5
+
+bottomNavigationBar:
+  backgroundColor: #ffffff
+  children:
+    - bottomNavigationItem:
+        label: "Home"
+        icon: https://via.placeholder.com/24
+        active: true
+    - bottomNavigationItem:
+        label: "Profile"
+        icon: https://via.placeholder.com/24/ff0000
+    - bottomNavigationItem:
+        label: "Settings"
+        icon: https://via.placeholder.com/24/0000ff
+```</div>
+      <div class="result" id="result2"></div>
+      <h3>Parsed Data:</h3>
+      <div class="parsed-data" id="parsed-data2"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Import the parser and renderer
+    import { parseSLML, processMarkdown } from '../parser.js';
+    import { renderSLMLToSVG } from '../renderer.js';
+
+    // Test cases
+    const testCases = [
+      {
+        id: 'result1',
+        parsedDataId: 'parsed-data1',
+        slml: `# Material Design Icons Test
+screen:
+  title: "Material Design Icons Test"
+  size: 400, 600
+  backgroundColor: #f5f5f5
+
+bottomNavigationBar:
+  backgroundColor: #ffffff
+  children:
+    - bottomNavigationItem:
+        label: "Home"
+        icon: mdiHome
+        active: true
+    - bottomNavigationItem:
+        label: "Search"
+        icon: mdiMagnify
+    - bottomNavigationItem:
+        label: "Settings"
+        icon: mdiSettings`
+      },
+      {
+        id: 'result2',
+        parsedDataId: 'parsed-data2',
+        slml: `# Image Icons Test
+screen:
+  title: "Image Icons Test"
+  size: 400, 600
+  backgroundColor: #f5f5f5
+
+bottomNavigationBar:
+  backgroundColor: #ffffff
+  children:
+    - bottomNavigationItem:
+        label: "Home"
+        icon: https://via.placeholder.com/24
+        active: true
+    - bottomNavigationItem:
+        label: "Profile"
+        icon: https://via.placeholder.com/24/ff0000
+    - bottomNavigationItem:
+        label: "Settings"
+        icon: https://via.placeholder.com/24/0000ff`
+      }
+    ];
+
+    // Render the test cases
+    window.addEventListener('DOMContentLoaded', () => {
+      testCases.forEach(testCase => {
+        try {
+          // Parse the SLML
+          const parsedScreen = processMarkdown(testCase.slml)[0];
+          
+          // Display the parsed data
+          document.getElementById(testCase.parsedDataId).textContent = JSON.stringify(parsedScreen, null, 2);
+          
+          // Render the SVG
+          const svg = renderSLMLToSVG(parsedScreen, 0.6);
+          document.getElementById(testCase.id).innerHTML = svg;
+          
+          console.log(`Parsed Screen for ${testCase.id}:`, parsedScreen);
+        } catch (error) {
+          document.getElementById(testCase.id).innerHTML = `<div style="color: red;">Error: ${error.message}</div>`;
+          document.getElementById(testCase.parsedDataId).textContent = error.stack;
+          console.error(`Error parsing or rendering for ${testCase.id}:`, error);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

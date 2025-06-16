@@ -482,6 +482,22 @@ function renderBottomNavigationBar(element: SLMLElement, screenWidth: number, yO
         svg += `
           <text x="${itemX + itemWidth / 2}" y="${bottomPosition + height / 2 + 15}" font-family="${FONT_FAMILY}" font-size="12" fill="${color}" text-anchor="middle" dominant-baseline="middle">${item.label}</text>
         `;
+      } 
+      // Check if this is an image URL
+      else if (typeof icon === 'string' && (
+        icon.startsWith('http') || 
+        icon.endsWith('.jpg') || 
+        icon.endsWith('.jpeg') || 
+        icon.endsWith('.png') || 
+        icon.endsWith('.svg') || 
+        icon.endsWith('.gif')
+      )) {
+        // Render as an image
+        const iconSize = 24;
+        svg += `
+          <image href="${icon}" x="${itemX + itemWidth / 2 - iconSize/2}" y="${bottomPosition + height / 2 - 15 - iconSize/2}" width="${iconSize}" height="${iconSize}" />
+          <text x="${itemX + itemWidth / 2}" y="${bottomPosition + height / 2 + 15}" font-family="${FONT_FAMILY}" font-size="12" fill="${color}" text-anchor="middle" dominant-baseline="middle">${item.label}</text>
+        `;
       } else {
         // Regular text/emoji icon
         svg += `
