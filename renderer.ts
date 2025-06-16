@@ -393,7 +393,6 @@ function renderLink(element: DCUIElement, screenWidth: number, yOffset: number, 
  * Renders an Image element
  */
 function renderImage(element: DCUIElement, screenWidth: number, yOffset: number, _scale: number): { svg: string, nextY: number } {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const url = element.url || element.label;
   const align = element.align || 'center';
   const width = typeof element.width === 'number' ? element.width : 200;
@@ -414,17 +413,103 @@ function renderImage(element: DCUIElement, screenWidth: number, yOffset: number,
   // Apply padding to yOffset
   yOffset += padding;
 
-  // For SVG, we'll just render a placeholder rectangle with an image icon
-  const svg = `
+  // Create a placeholder SVG in case we can't load the image
+  const placeholderSvg = `
     <rect x="${x}" y="${yOffset}" width="${width}" height="${height}" fill="#f8f9fa" stroke="#ced4da" rx="4" />
     <text x="${x + width / 2}" y="${yOffset + height / 2 - 15}" font-family="${FONT_FAMILY}" font-size="24" fill="#6c757d" text-anchor="middle" dominant-baseline="middle">🖼️</text>
     <text x="${x + width / 2}" y="${yOffset + height / 2 + 15}" font-family="${FONT_FAMILY}" font-size="${DEFAULT_FONT_SIZE}" fill="#6c757d" text-anchor="middle" dominant-baseline="middle">Image</text>
   `;
 
-  return {
-    svg,
-    nextY: yOffset + height + ELEMENT_PADDING
-  };
+  // Check if URL is provided and is a valid URL
+  if (url && typeof url === 'string' && (url.startsWith('http://') || url.startsWith('https://'))) {
+    // For external images, we'll fetch the image and convert it to base64
+    // Since we can't do async operations here, we'll return a placeholder first
+    // and then update it when the image is loaded
+
+    // Create a unique ID for this image
+    const imageId = `image-${Math.random().toString(36).substring(2, 11)}`;
+
+    // Create a placeholder with the unique ID
+    const svg = `
+      <g id="${imageId}">
+        ${placeholderSvg}
+      </g>
+    `;
+
+    // Fetch the image and update the SVG when it's loaded
+    fetchImageAsBase64(url)
+      .then(base64Data => {
+        // Find the element with the unique ID
+        const element = document.getElementById(imageId);
+        if (element) {
+          // Update the element with the base64 image
+          element.innerHTML = `
+            <image x="${x}" y="${yOffset}" width="${width}" height="${height}" href="${base64Data}" preserveAspectRatio="xMidYMid meet" />
+          `;
+        }
+      })
+      .catch(error => {
+        console.error('Error loading image:', error);
+      });
+
+    return {
+      svg,
+      nextY: yOffset + height + ELEMENT_PADDING
+    };
+  } else {
+    // Fallback to placeholder if URL is not provided or not valid
+    return {
+      svg: placeholderSvg,
+      nextY: yOffset + height + ELEMENT_PADDING
+    };
+  }
+}
+
+/**
+ * Fetches an image from a URL and converts it to a base64 data URL
+ * @param url - The URL of the image to fetch
+ * @returns A Promise that resolves to a base64 data URL
+ */
+function fetchImageAsBase64(url: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    // Create a new image element
+    const img = new Image();
+
+    // Set up event handlers
+    img.onload = () => {
+      try {
+        // Create a canvas element
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        // Draw the image on the canvas
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          reject(new Error('Could not get canvas context'));
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0);
+
+        // Convert the canvas to a base64 data URL
+        const dataUrl = canvas.toDataURL('image/png');
+        resolve(dataUrl);
+      } catch (error) {
+        reject(error);
+      }
+    };
+
+    img.onerror = () => {
+      reject(new Error(`Failed to load image from URL: ${url}`));
+    };
+
+    // Set CORS mode to anonymous to avoid CORS issues
+    img.crossOrigin = 'anonymous';
+
+    // Start loading the image
+    img.src = url;
+  });
 }
 
 /**
