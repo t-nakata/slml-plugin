@@ -471,6 +471,37 @@ For CI/CD pipelines, you can use the `ci` target which runs both linting and bui
 make ci
 ```
 
+### Deployment
+
+The project is set up for deployment to Firebase Hosting. To deploy:
+
+1. Prepare the release files:
+
+```bash
+# Using Makefile
+make release
+```
+
+This will compile the TypeScript files and copy the necessary files to the `public` directory.
+
+2. Deploy to Firebase Hosting:
+
+```bash
+# Install Firebase CLI if you haven't already
+npm install -g firebase-tools
+
+# Login to Firebase
+firebase login
+
+# Initialize Firebase in the project (first time only)
+firebase init hosting
+
+# Deploy to Firebase Hosting
+firebase deploy --only hosting
+```
+
+The application will be available at the Firebase Hosting URL provided after deployment.
+
 ## License
 
 MIT

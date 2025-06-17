@@ -7,6 +7,9 @@
     "build": "make build",
     "lint": "eslint --ext .ts .",
     "lint:fix": "eslint --ext .ts . --fix",
+    "release": "make release",
+    "login": "make login",
+    "deploy": "make deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {

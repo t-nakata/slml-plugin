@@ -49,6 +49,28 @@ lint-fix:
 ci: lint build
 	@echo "CI checks completed successfully!"
 
+# Release target for Firebase Hosting
+release: build
+	@echo "Preparing release for Firebase Hosting..."
+	@mkdir -p public
+	@cp index.html public/
+	@cp parser.js public/
+	@cp renderer.js public/
+	@cp icons.js public/
+	@echo "Release preparation complete! Files are in the 'public' directory."
+
+# Firebase login target
+login:
+	@echo "Logging in to Firebase..."
+	firebase login
+	@echo "Firebase login complete!"
+
+# Deploy target for Firebase Hosting
+deploy: release
+	@echo "Deploying to Firebase Hosting..."
+	firebase deploy --only hosting
+	@echo "Deployment complete!"
+
 # Help target
 help:
 	@echo "Available targets:"
@@ -58,6 +80,9 @@ help:
 	@echo "  lint      - Run ESLint on TypeScript files"
 	@echo "  lint-fix  - Run ESLint and fix issues automatically"
 	@echo "  ci        - Run linting and build (for CI/CD)"
+	@echo "  release   - Prepare files for Firebase Hosting deployment"
+	@echo "  login     - Login to Firebase"
+	@echo "  deploy    - Deploy to Firebase Hosting"
 	@echo "  help      - Display this help message"
 
-.PHONY: all build clean lint lint-fix ci help
+.PHONY: all build clean lint lint-fix ci release login deploy help

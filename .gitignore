@@ -2,3 +2,11 @@
 /node_modules/
 /package-lock.json
 /.eslintcache
+
+# Firebase files
+/.firebase/
+/firebase-debug.log
+
+# Build output
+/public/*.js
+/public/*.html
