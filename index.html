@@ -169,9 +169,8 @@ Link:
   </div>
 
   <script type="module">
-    // Import the parser and renderer
-    import { processMarkdown } from './parser.js';
-    import { renderDCUIToSVG, replaceDCUIWithSVG } from './renderer.js';
+    // Import from the bundled file
+    import { processMarkdown, renderDCUIToSVG, replaceDCUIWithSVG } from './bundle.js';
 
     // DOM elements
     const markdownInput = document.getElementById('markdown-input');
@@ -182,10 +181,7 @@ Link:
     const downloadSvgBtn = document.getElementById('download-svg-btn');
 
     // Example DCUI code
-    const exampleMarkdown = `# Login Screen Example
-
-Below is a simple login screen with custom styling:
-
+    const exampleMarkdown = `
 \`\`\`dcui
 # Login Screen
 screen:
@@ -241,7 +237,7 @@ Link:
       if (!markdown) return '';
 
       // Replace DCUI blocks first
-      let html = replaceDCUIWithSVG(markdown, 0.6);
+      let html = replaceDCUIWithSVG(markdown, 1.0);
 
       // Process regular markdown syntax
       // Headers

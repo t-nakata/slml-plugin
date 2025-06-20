@@ -5,24 +5,8 @@
  * as SVG diagrams.
  */
 
-import { processMarkdown } from './parser.js';
-
-// Define interfaces locally since they're not available in the compiled JS
-interface DCUIScreen {
-  title: string;
-  width: number;
-  height: number;
-  backgroundColor: string;
-  elements: DCUIElement[];
-}
-
-interface DCUIElement {
-  type: string;
-  label: string;
-  [key: string]: string | number | boolean | DCUIElement[]; // Allow specific property types at the same level as type and label
-  children?: DCUIElement[];
-}
-import { createIconSVG } from './icons.js';
+import { processMarkdown, DCUIScreen, DCUIElement } from './parser';
+import { createIconSVG } from './icons';
 
 // Constants for rendering
 const ELEMENT_HEIGHT = 40;
@@ -661,3 +645,6 @@ function replaceDCUIWithSVG(markdown: string, scale = 1.0): string {
 
 // Export functions for use in other modules
 export { renderDCUIToSVG, replaceDCUIWithSVG };
+
+// Re-export functions from parser for the bundled file
+export { processMarkdown } from './parser';
